@@ -1,0 +1,34 @@
+Package: Spower
+Title: Power Analyses using Monte Carlo Simulations
+Version: 0.2.2
+Authors@R: 
+   person("Phil", family="Chalmers", email =
+                     "rphilip.chalmers@gmail.com", role = c("aut", "cre"), 
+                     comment = c(ORCID="0000-0001-5332-2810"))
+Description: Provides a general purpose simulation-based power analysis 
+   API for routine and customized simulation experimental designs. 
+   The package focuses exclusively on Monte Carlo simulation variants of 
+   (expected) prospective power analyses, 
+   criterion power analyses, compromise power analyses, sensitivity analyses, and prospective/post-hoc
+   power analyses. The default simulation experiment functions found within the package 
+   provide stochastic variants of the power analyses subroutines found in the 
+   G*Power 3 software (Faul, Erdfelder, Buchner, and Lang, 2009) <doi:10.3758/brm.41.4.1149>,
+   along with various other power analysis examples (e.g., mediation analyses). Supporting
+   functions are also included, such as for building empirical power curve estimates,
+   which utilize a similar API structure.
+Depends: SimDesign (>= 2.19.1), R (>= 4.1.0), stats
+Imports: cocor, car, polycor, parallelly, methods, ggplot2, plotly,
+        lavaan, EnvStats
+Suggests: knitr, rmarkdown, bookdown, VGAM, copula, pwr
+VignetteBuilder: knitr
+License: GPL (>= 3)
+Encoding: UTF-8
+Repository: CRAN
+Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
+URL: https://github.com/philchalmers/Spower
+BugReports: https://github.com/philchalmers/Spower/issues?state=open
+RoxygenNote: 7.3.2
+NeedsCompilation: no
+Packaged: 2025-03-24 14:39:32 UTC; phil
+Author: Phil Chalmers [aut, cre] (<https://orcid.org/0000-0001-5332-2810>)
+Date/Publication: 2025-03-25 15:40:02 UTC
