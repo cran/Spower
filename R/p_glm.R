@@ -1,7 +1,7 @@
 #' p-value from (generalized) linear regression model simulations with fixed predictors
 #'
 #' p-values associated with (generalized) linear regression model.
-#' Requires a prespecified design matrix (\code{X}).
+#' Requires a pre-specified design matrix (\code{X}).
 #'
 #' @param formula formula passed to either \code{\link{lm}} or
 #'   \code{\link{glm}}
@@ -42,6 +42,30 @@
 #' p_glm(y ~ G + C, test="Gtreatment = 0",
 #'   X=X, betas=c(-2, .5, .01), family=poisson())
 #'
+#' \donttest{
+#'
+#' # test whether two slopes differ given different samples.
+#' #   To do this setup data as an MLR where a binary variable S
+#' #   is used to reflect the second sample, and the interaction
+#' #   effect evaluates the magnitude of the slope difference
+#' gen_twogroup <- function(n, dbeta, sdx1, sdx2, sigma, n2_n1 = 1, ...){
+#'   X1 <- rnorm(n, sd=sdx1)
+#'   X2 <- rnorm(n*n2_n1, sd=sdx2)
+#'   X <- c(X1, X2)
+#'   N <- length(X)
+#'   S <- c(rep(0, n), rep(1, N-n))
+#'   y <- dbeta * X*S + rnorm(N, sd=sigma)
+#'   dat <- data.frame(y, X, S)
+#'   dat
+#' }
+#'
+#' # prospective power using test that interaction effect is equal to 0
+#' p_glm(formula=y~X*S, test="X:S = 0",
+#' 	  n=100, sdx1=1, sdx2=2, dbeta=0.2,
+#' 	  sigma=0.5, gen_fun=gen_twogroup) |> Spower(replications=1000)
+#'
+#' }
+#'
 #'
 p_glm <- function(formula, X, betas, test, sigma = NULL,
 				  family = gaussian(), gen_fun=gen_glm, ...){
@@ -50,9 +74,9 @@ p_glm <- function(formula, X, betas, test, sigma = NULL,
 				 family=family, ...)
 	mod <- if(family$family == 'gaussian'){
 		stopifnot(!is.null(sigma))
-		lm(formula=formula, data=X, ...)
+		lm(formula=formula, data=X)
 	} else {
-		glm(formula=formula, data=X, family=family, ...)
+		glm(formula=formula, data=X, family=family)
 	}
 	if(!is.list(test))
 		test <- list(test)
