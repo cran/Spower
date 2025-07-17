@@ -13,6 +13,19 @@ test_that('Spower', {
 	outu <- update(out1, sig.level = .10)
 	expect_equal(outu$power, .8)
 
+	# selection test
+	ind.t.test <- function(n, d){
+		g1 <- rnorm(n)
+		g2 <- rnorm(n, mean=d)
+		out <- t.test(g2, g1, var.equal=TRUE)
+		c(p=out$p.value, xbar=out$estimate[1], se=out$stderr)
+	}
+	out1 <- ind.t.test(n = 50, d = .5) |>
+		Spower(replications=10, select='p', verbose=FALSE)
+	expect_class(out1, 'Spower')
+	expect_equal(ncol(out1), 8)
+	expect_equal(ncol(SimResults(out1)), 6)
+
 	set.seed(4321)
 	out2 <- Spower(p_t.test(n = NA, d = .5), power=.5, interval=c(10, 100),
 				   maxiter = 40, verbose=FALSE)
@@ -85,6 +98,57 @@ test_that('multi', {
 	expect_equal(new_sim$power.welch, .1)
 	new_sim2 <- update(sim, beta_alpha=4)
 	expect_equal(new_sim2$power, .494, tolerance=1e-2)
+
+})
+
+test_that('rerun', {
+
+	set.seed(1234321)
+	out <- p_t.test(n = 50, d = .5) |> Spower(replications=100, verbose=FALSE,
+											  beta_alpha = 4)
+	expect_equal(out$power, .740, tol=1e-2)
+	p_t.test(n = 50, d = .5) |>
+		Spower(replications=100, lastSpower=out,
+			   verbose=FALSE, beta_alpha = 4) -> out2
+	expect_equal(out2$REPLICATIONS, 200)
+	expect_equal(out2$power, .759, tol=1e-2)
+
+
+	set.seed(90210)
+	out <- p_t.test(n = 50, d = .5) |> Spower(replications=100, verbose=FALSE)
+	p_t.test(n = 50, d = .5) |>
+		Spower(replications=100, lastSpower=out, verbose=FALSE) -> out2
+	expect_equal(out2$REPLICATIONS, 200)
+	expect_equal(attr(out2, 'extra_info')$SEED_history, c(1471380155, 1411519934))
+
+	out <- p_t.test(n = NA, d = .5) |> Spower(power=.8, interval=c(10, 100),
+											  maxiter=40, verbose=FALSE)
+	expect_equal(out$n, 62.04, tolerance=1e-4)
+	expect_equal(unname(summary(out)$predCIs_root), c(60.20545, 64.10115), tolerance=1e-4)
+
+	p_t.test(n = NA, d = .5) |>
+		Spower(power=.8, interval=c(10, 100), lastSpower=out, maxiter=70, verbose=FALSE) -> out2
+	expect_equal(out2$n, 63.06, tolerance=1e-2)
+	expect_equal(unname(summary(out2)$predCIs_root), c(62.37223, 63.73347), tolerance=1e-4)
+
+	# multi
+	p_my_t.test <- function(n, d){
+		g1 <- rnorm(n)
+		g2 <- rnorm(n, mean=d)
+		p1 <- t.test(g1, g2, var.equal=FALSE)$p.value
+		p2 <- t.test(g1, g2, var.equal=TRUE)$p.value
+		c(welch=p1, ind=p2)
+	}
+
+	set.seed(54321)
+	out <- p_my_t.test(n = 30, d = .5) |>
+		Spower(replications=100, verbose=FALSE)
+	p_my_t.test(n = 30, d = .5) |>
+		Spower(replications=900, lastSpower=out, verbose=FALSE) -> out2
+	expect_equal(c(out2$power.welch, out2$power.ind), c(.494, .497))
+	expect_equal(out2$REPLICATIONS, 1000)
+	expect_equal(attr(out2, 'extra_info')$SEED_history, c(1500916448, 1842577306))
+
 
 })
 

@@ -15,9 +15,11 @@
 #' \describe{
 #'    \item{A Priori}{Solve for a missing sample size component
 #'      (e.g., \code{n}) to achieve a specific target power rate}
-#'    \item{Prospective (and Post-hoc)}{Estimate the power rate given a set of fixed conditions.
+#'    \item{Prospective and Post-hoc}{Estimate the power rate given a set of fixed conditions.
 #'      If estimates of effect sizes and other empirical characteristics (e.g., observed sample size)
-#'      are supplied instead this results in post-hoc/observed/retrospective power (not recommended)}
+#'      are supplied this results in observed/retrospective power (not recommended), while if only
+#'      sample size is included as the observed quantity, but the effect sizes are treated as unknown, then this
+#'      results in post-hoc power (Cohen, 1988)}
 #'    \item{Sensitivity}{Solve a missing effect size value as a function of
 #'      the other supplied constant components}
 #'    \item{Criterion}{Solve the error rate (argument \code{sig.level}) as a
@@ -58,6 +60,14 @@
 #'
 #' @param maxiter maximum number of stochastic root-solving iterations
 #'
+#' @param select a character vector indicating which elements to
+#'   extract from the provided stimulation experiment function. By default, all elements
+#'   from the provided function will be used, however if the provided function contains
+#'   information not relevant to the power computations (e.g., parameter estimates,
+#'   standard errors, etc) then these should be ignored. To extract the complete
+#'   results post-analysis use \code{\link[SimDesign]{SimResults}} to allow manual
+#'   summarizing of the stored results (applicable only with prospective/post-hoc power)
+#'
 #' @param sig.level alpha level to use. If set to \code{NA} then the empirical
 #'   alpha will be estimated given the fixed \code{conditions} input
 #'   (e.g., for criterion power analysis). Only used when the value returned
@@ -81,6 +91,14 @@
 #'
 #' @param replications number of replications to use when
 #'   \code{\link[SimDesign]{runSimulation}} is required
+#'
+#' @param lastSpower a previously returned \code{Spower} object to be updated.
+#'   Use this if you want to continue where an estimate left off but wish to increase the
+#'   precision (e.g., by adding more replications, or by letting the stochastic root solver
+#'   continue searching).
+#'
+#'   Note that if the object was not stored use \code{\link{getLastSpower}}
+#'   to obtain the last estimated power object
 #'
 #' @param integer a logical value indicating whether the search iterations
 #'   use integers or doubles.
@@ -165,8 +183,14 @@
 #' summary(out)   # extra information
 #' as.data.frame(out)  # coerced to data.frame
 #'
-#' # increase precision
-#' p_t.test(n = 50, d = .5) |> Spower(replications=30000)
+#' # increase precision (not run)
+#' # p_t.test(n = 50, d = .5) |> Spower(replications=30000)
+#'
+#' # alternatively, increase precision from previous object.
+#' #   Here we add 20000 more replications on top of the previous 10000
+#' p_t.test(n = 50, d = .5) |>
+#'   Spower(replications=20000, lastSpower=out) -> out2
+#' out2$REPLICATIONS  # total of 30000 replications for estimate
 #'
 #' # previous analysis not stored to object, but can be retrieved
 #' out <- getLastSpower()
@@ -201,6 +225,13 @@
 #' #  with 2 cores (not run)
 #' p_t.test(n = NA, d = .5) |>
 #'   Spower(power=.8, interval=c(2,500), wait.time='1', parallel=TRUE, ncores=2)
+#'
+#' # Similiar to above for precision improvements, however letting
+#' #  the root solver continue searching from an early search history.
+#' #  Usually a good idea to increase the maxiter and lower the predCI.tol
+#' p_t.test(n = NA, d = .5) |>
+#'   Spower(power=.8, interval=c(2,500), lastSpower=out,
+#'         maxiter=200, predCI.tol=.008) #starts at last iteration in "out"
 #'
 #' # Solve d to get .80 power (sensitivity power analysis)
 #' p_t.test(n = 50, d = NA) |> Spower(power=.8, interval=c(.1, 2))
@@ -369,7 +400,7 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 				   ncores = parallelly::availableCores(omit = 1L),
 				   predCI = 0.95, predCI.tol = .01, verbose = TRUE,
 				   check.interval = FALSE, maxiter=150, wait.time = NULL,
-				   control = list()){
+				   lastSpower = NULL, select = NULL, control = list()){
 	if(missing(beta_alpha)) beta_alpha <- NULL
 	if(!is.null(cl)) parallel <- TRUE
 	control$useAnalyseHandler <- FALSE
@@ -414,6 +445,8 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 	fixed_objects$expr <- expr
 	fixed_objects$pick <- pick
 	fixed_objects$parent_frame <- pf
+	stopifnot(is.null(select) || is.character(select))
+	fixed_objects$select <- select
 	if((is.na(power) + is.na(sig.level) + length(pick)) != 1)
 		stop('Exactly *one* argument must be set to \'NA\' in Spower(..., power, sig.level)',
 			 call.=FALSE)
@@ -437,15 +470,34 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 		conditions$power <- NULL
 		if(is.null(beta_alpha))
 			summarise <- Internal_Summarise.Full
+		seed <- SimDesign::genSeeds(conditions)
+		if(!is.null(lastSpower)){
+			while(TRUE){
+				if(!(seed %in% attr(lastSpower, 'extra_info')$SEED_history)) break
+				seed <- SimDesign::genSeeds(conditions)
+			}
+		}
 		tmp <- SimDesign::runSimulation(conditions, replications=replications,
 					  analyse=sim_function_aug, summarise=summarise,
 					  fixed_objects=fixed_objects, save=FALSE, resume=FALSE,
-					  cl=cl, parallel=parallel, ncores=ncores,
+					  cl=cl, parallel=parallel, ncores=ncores, seed=seed,
 					  verbose=verbose, packages=packages, control=control)
+		attr(tmp, 'extra_info')$SEED_history <- seed
+		if(!is.null(lastSpower))
+			attr(tmp, 'extra_info')$SEED_history <-
+			unique(c(seed, attr(lastSpower, 'extra_info')$SEED_history))
 		alpha <- 1 - predCI
 		pick <- grepl('^power', colnames(tmp))
 		pwrnms <- colnames(tmp)[grepl('^power', colnames(tmp))]
 		conditions[pwrnms] <- NA
+		if(!is.null(lastSpower)){
+			attr(tmp, 'extra_info')$stored_results <-
+				rbind(attr(tmp, 'extra_info')$stored_results,
+					  attr(lastSpower, 'extra_info')$stored_results)
+			replications <- tmp$REPLICATIONS + lastSpower$REPLICATIONS
+			tmp$REPLICATIONS <- replications
+			tmp[pwrnms] <- SimDesign::reSummarise(summarise, results=tmp)[pwrnms]
+		}
 		CI.lst <- lapply(pwrnms, \(pwrnm){
 			CI <- tmp[[pwrnm]] + qnorm(c(alpha/2, predCI+alpha/2)) *
 				sqrt((tmp[[pwrnm]] * (1-tmp[[pwrnm]]))/replications)
@@ -457,7 +509,7 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 		colnames(CI) <- paste0('CI_', c(alpha/2, predCI+alpha/2)*100)
 		attr(tmp, 'extra_info')$power.CI <- CI
 		attr(tmp, 'extra_info')[c("number_of_conditions", "Design.ID",
-								  'save_info')] <- NULL
+								  'save_info', 'functions')] <- NULL
 		tmp
 	} else {
 		SimDesign::SimSolve(conditions, interval=interval,
@@ -468,7 +520,8 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 							verbose=ifelse(verbose, 2, FALSE),
 							predCI=predCI, predCI.tol=predCI.tol,
 							control=control, check.interval=check.interval,
-							maxiter=maxiter, wait.time=wait.time, packages=packages)
+							maxiter=maxiter, wait.time=wait.time, packages=packages,
+							lastSolve=lastSpower)
 	}
 	if(!is.null(beta_alpha)){
 		out <- uniroot(compromise_root, c(.0001, .9999), beta_alpha=beta_alpha,
@@ -494,7 +547,8 @@ sim_function_aug <- function(condition, dat, fixed_objects){
 	if(length(pick))
 		fixed_objects$expr[pick] <- condition[pick]
 	ret <- eval(fixed_objects$expr, envir = fixed_objects$parent_frame)
-	if(is.logical(ret)) ret <- as.integer(!ret)
+	if(any(is.logical(ret)))
+		ret[is.logical(ret)] <- as.integer(!ret[is.logical(ret)])
 	ret
 }
 

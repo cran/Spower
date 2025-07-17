@@ -23,6 +23,8 @@ Spower(
   check.interval = FALSE,
   maxiter = 150,
   wait.time = NULL,
+  lastSpower = NULL,
+  select = NULL,
   control = list()
 )
 
@@ -112,6 +114,22 @@ within \code{.01/2} of the target power}
 See \code{\link[SimDesign]{SimSolve}} for details and
 See \code{\link[SimDesign]{timeFormater}} for further specifications}
 
+\item{lastSpower}{a previously returned \code{Spower} object to be updated.
+Use this if you want to continue where an estimate left off but wish to increase the
+precision (e.g., by adding more replications, or by letting the stochastic root solver
+continue searching).
+
+Note that if the object was not stored use \code{\link{getLastSpower}}
+to obtain the last estimated power object}
+
+\item{select}{a character vector indicating which elements to
+extract from the provided stimulation experiment function. By default, all elements
+from the provided function will be used, however if the provided function contains
+information not relevant to the power computations (e.g., parameter estimates,
+standard errors, etc) then these should be ignored. To extract the complete
+results post-analysis use \code{\link[SimDesign]{SimResults}} to allow manual
+summarizing of the stored results (applicable only with prospective/post-hoc power)}
+
 \item{control}{a list of control parameters to pass to
 \code{\link[SimDesign]{runSimulation}} or \code{\link[SimDesign]{SimSolve}}}
 
@@ -139,9 +157,11 @@ which are triggered based on which supplied input is set to missing (\code{NA}):
 \describe{
 \item{A Priori}{Solve for a missing sample size component
 (e.g., \code{n}) to achieve a specific target power rate}
-\item{Prospective (and Post-hoc)}{Estimate the power rate given a set of fixed conditions.
+\item{Prospective and Post-hoc}{Estimate the power rate given a set of fixed conditions.
 If estimates of effect sizes and other empirical characteristics (e.g., observed sample size)
-are supplied instead this results in post-hoc/observed/retrospective power (not recommended)}
+are supplied this results in observed/retrospective power (not recommended), while if only
+sample size is included as the observed quantity, but the effect sizes are treated as unknown, then this
+results in post-hoc power (Cohen, 1988)}
 \item{Sensitivity}{Solve a missing effect size value as a function of
 the other supplied constant components}
 \item{Criterion}{Solve the error rate (argument \code{sig.level}) as a
@@ -185,8 +205,14 @@ out <- Spower(p_t.test(n = 50, d = .5))
 summary(out)   # extra information
 as.data.frame(out)  # coerced to data.frame
 
-# increase precision
-p_t.test(n = 50, d = .5) |> Spower(replications=30000)
+# increase precision (not run)
+# p_t.test(n = 50, d = .5) |> Spower(replications=30000)
+
+# alternatively, increase precision from previous object.
+#   Here we add 20000 more replications on top of the previous 10000
+p_t.test(n = 50, d = .5) |>
+  Spower(replications=20000, lastSpower=out) -> out2
+out2$REPLICATIONS  # total of 30000 replications for estimate
 
 # previous analysis not stored to object, but can be retrieved
 out <- getLastSpower()
@@ -221,6 +247,13 @@ ceiling(pwr$n) * 2
 #  with 2 cores (not run)
 p_t.test(n = NA, d = .5) |>
   Spower(power=.8, interval=c(2,500), wait.time='1', parallel=TRUE, ncores=2)
+
+# Similiar to above for precision improvements, however letting
+#  the root solver continue searching from an early search history.
+#  Usually a good idea to increase the maxiter and lower the predCI.tol
+p_t.test(n = NA, d = .5) |>
+  Spower(power=.8, interval=c(2,500), lastSpower=out,
+        maxiter=200, predCI.tol=.008) #starts at last iteration in "out"
 
 # Solve d to get .80 power (sensitivity power analysis)
 p_t.test(n = 50, d = NA) |> Spower(power=.8, interval=c(.1, 2))
