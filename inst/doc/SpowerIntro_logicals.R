@@ -1,0 +1,194 @@
+## ----include=FALSE------------------------------------------------------------
+library(Spower)
+set.seed(42)
+formals(SpowerCurve)$plotly <- FALSE
+
+## ----include=FALSE------------------------------------------------------------
+eval <- FALSE  # set to FALSE for normal run
+store <- list()
+if(!eval)
+	store <- readRDS(system.file("intro2.rds", package = 'Spower'))
+
+## ----include=eval-------------------------------------------------------------
+getwd()
+
+## ----eval=eval----------------------------------------------------------------
+# p_single.Bayes.t <- function(n, mean, mu){
+# 	g <- rnorm(n, mean=mean)
+# 	res <- BayesFactor::ttestBF(g, mu=mu)	
+# 	bf <- exp(as.numeric(res@bayesFactor[1])) # Bayes factor
+# 	posterior <- bf / (bf + 1)   # assuming hypotheses are equally likely
+# 	posterior   # P(H_1|D)
+# }
+
+## ----eval=eval----------------------------------------------------------------
+# # power cut-off for a significantly supportive posterior is > 0.90
+# p_single.Bayes.t(n=100, mean=.5, mu=.3) |>
+# 	Spower(sig.level = .90, sig.direction = 'above')
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$prospectiveBayes <- getLastSpower()
+prospectiveBayes <- store$prospectiveBayes
+print(prospectiveBayes)
+
+## -----------------------------------------------------------------------------
+p_single.t <- function(n, mean, mu=0){
+	g <- rnorm(n, mean=mean)
+	p <- t.test(g, mu=mu)$p.value
+	p
+}
+
+## -----------------------------------------------------------------------------
+l_single.t <- function(n, mean, mu=0, conf.level=.95){
+	g <- rnorm(n, mean=mean)
+	out <- t.test(g, mu=mu, conf.level=conf.level)
+	CI <- out$conf.int
+	is.outside_CI(mu, CI)   # equivalent to: !(CI[1] < mu && mu < CI[2])
+}
+
+l_single.t(100, mean=.2)
+
+## ----eval=eval----------------------------------------------------------------
+# p_single.t(n=100, mean=.3) |> Spower()
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$pPower <- getLastSpower()
+pPower <- store$pPower
+print(pPower)
+
+## ----eval=eval----------------------------------------------------------------
+# l_single.t(n=100, mean=.3) |> Spower()
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$lPower <- getLastSpower()
+lPower <- store$lPower
+print(lPower)
+
+## -----------------------------------------------------------------------------
+l_precision <- function(n, mean, CI.width, mu=0, alpha=.05){
+	g <- rnorm(n, mean=mean)
+	out <- t.test(g, mu=mu)
+	CI <- out$conf.int
+	width <- CI[2] - CI[1]
+	out$p.value < alpha && width < CI.width
+}
+
+## ----eval=eval----------------------------------------------------------------
+# l_precision(n=NA, mean=.2, CI.width=1/4) |>
+# 	Spower(power=.80, interval=c(10, 500))
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$lprecision <- getLastSpower()
+lprecision <- store$lprecision
+print(lprecision)
+
+## ----eval=eval----------------------------------------------------------------
+# l_precision(n=NA, mean=.2, CI.width=Inf) |>
+# 	Spower(power=.80, interval=c(10, 500))
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$lprecision2 <- getLastSpower()
+lprecision2 <- store$lprecision2
+print(lprecision2)
+
+## ----eval=eval----------------------------------------------------------------
+# l_single.Bayes.t_BF <- function(n, mean, mu=0, bf.cut=3){
+# 	g <- rnorm(n, mean=mean)
+# 	res <- BayesFactor::ttestBF(g, mu=mu)	
+# 	bf <- exp(as.numeric(res@bayesFactor[1])) # Bayes factor
+# 	bf > bf.cut
+# }
+
+## ----eval=eval----------------------------------------------------------------
+# l_single.Bayes.t_BF(n=100, mean=.5, mu=.3) |> Spower()
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$prospectiveBF3 <- getLastSpower()
+prospectiveBF3 <- store$prospectiveBF3
+print(prospectiveBF3)
+
+## -----------------------------------------------------------------------------
+l_equiv.t <- function(n, delta, equiv, sds = c(1,1), 
+					  sig.level = .025){
+	g1 <- rnorm(n, mean=0, sd=sds[1])
+	g2 <- rnorm(n, mean=delta, sd=sds[2])
+	outL <- t.test(g2, g1, mu=-equiv[1], alternative = "less")$p.value
+	outU <- t.test(g2, g1, mu=equiv[2], alternative = "less")$p.value
+	outL < sig.level && outU < sig.level
+}
+
+## ----eval=eval----------------------------------------------------------------
+# l_equiv.t(100, delta=1, equiv=c(-2.5, 2.5),
+# 		  sds=c(2.5, 2.5)) |> Spower()
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$equivT <- getLastSpower()
+equivT <- store$equivT
+print(equivT)
+
+## ----eval=FALSE---------------------------------------------------------------
+# TOSTER::power_t_TOST(n = 100,
+# 			 delta = 1,
+# 			 sd = 2.5,
+# 			 eqb = 2.5,
+# 			 alpha = .025,
+# 			 power = NULL,
+# 			 type = "two.sample")
+
+## -----------------------------------------------------------------------------
+l_equiv.t_CI <- function(n, delta, equiv, 
+						 sds=c(1,1), conf.level = .95){
+	g1 <- rnorm(n, mean=0, sd=sds[1])
+	g2 <- rnorm(n, mean=delta, sd=sds[2])
+	CI <- t.test(g2, g1, conf.level=conf.level)$conf.int
+	is.CI_within(CI, interval=equiv)  # returns TRUE if CI is within equiv interval
+}
+
+## ----eval=eval----------------------------------------------------------------
+# # an equivalent power analysis for "equivalence tests" via CI evaluations
+# l_equiv.t_CI(100, delta=1, equiv=c(-2.5, 2.5),
+# 		  sds=c(2.5, 2.5)) |> Spower()
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$equivTL <- getLastSpower()
+equivTL <- store$equivTL
+print(equivTL)
+
+## ----eval=eval----------------------------------------------------------------
+# library(bayestestR)
+# library(rstanarm)
+# 
+# p_rope.lm <- function(n, beta0, beta1, range, sigma=1, ...){
+# 	# generate data
+# 	x <- matrix(rep(0:1, each=n))
+# 	y <- beta0 + beta1 * x + rnorm(nrow(x), sd=sigma)
+# 	dat <- data.frame(y, x)
+# 	
+# 	# run model, but tell stan_glm() to use its indoor voice
+# 	model <- quiet(rstanarm::stan_glm(y ~ x, data = dat))
+# 	rope <- bayestestR::rope(model, ci=1, range=range, parameters="x")
+# 	as.numeric(rope)
+# }
+
+## ----eval=eval----------------------------------------------------------------
+# p_rope.lm(n=50, beta0=2, beta1=1, sigma=1/2, range=c(.8, 1.2)) |>
+# 	Spower(sig.level=.95, sig.direction='above', parallel=TRUE)
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$ROPE.lm <- getLastSpower()
+ROPE.lm <- store$ROPE.lm
+print(ROPE.lm)
+
+## ----eval=eval----------------------------------------------------------------
+# p_rope.lm(n=NA, beta0=2, beta1=1, sigma=1/2, range=c(.8, 1.2)) |>
+# 	Spower(power=.80, sig.level=.95, sig.direction='above',
+# 		   interval=c(50, 200), parallel=TRUE)
+
+## ----echo=FALSE---------------------------------------------------------------
+if(eval) store$ROPE.lm_n <- getLastSpower()
+ROPE.lm_n <- store$ROPE.lm_n
+print(ROPE.lm_n)
+
+## ----include=FALSE, eval=eval-------------------------------------------------
+# saveRDS(store, '../inst/intro2.rds') # rebuild package when done
+

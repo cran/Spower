@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Phil Chalmers" />
+
+<meta name="date" content="2025-09-05" />
+
+<title>Bayesian power analyses and logical vector returns</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Bayesian power analyses and logical vector returns</h1>
+<h4 class="author">Phil Chalmers</h4>
+<h4 class="date">September 05, 2025</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#posterior-probability-criteria-bayesian-power-analysis">Posterior probability criteria (Bayesian power analysis)</a></li>
+<li><a href="#logical-returns">Logical returns</a>
+<ul>
+<li><a href="#confidence-and-credible-intervals">Confidence (and credible) intervals</a></li>
+<li><a href="#precision-criterion">Precision criterion</a></li>
+<li><a href="#bayes-factors">Bayes Factors</a></li>
+</ul></li>
+<li><a href="#regions-of-practical-equivalence-ropes">Regions of practical equivalence (ROPEs)</a>
+<ul>
+<li><a href="#equivalence-testing">Equivalence testing</a></li>
+<li><a href="#bayesian-approach-to-ropes-hdi-rope">Bayesian approach to ROPEs (HDI + ROPE)</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="posterior-probability-criteria-bayesian-power-analysis" class="section level1">
+<h1>Posterior probability criteria (Bayesian power analysis)</h1>
+<p>The canonical way that <em>Spower</em> has been written by focusing primarily on <span class="math inline">\(p\)</span>-values involving the null hypothesis to be tested (<span class="math inline">\(P(D|H_0)\)</span>). The reason for setting the package up this way is so that the parameter <span class="math inline">\(\alpha\)</span> parameter can be used as the “line-in-the-sand” threshold to flag whether a hypothesis was rejected (under the null hypothesis) as this behaviour is common among popular power analysis software.</p>
+<p>However, Bayesian power analysis are also supported by the package, where for instance the posterior probability of the alternative hypothesis, <span class="math inline">\(P(H_1|D)\)</span>, is the outcome of the simulation experiment. For instance, and continuing with the simple one-sample <span class="math inline">\(t\)</span>-test example in the introduction vignette, were the power analysis context be that of a Bayesian analysis the conditional probability of the alternative, <span class="math inline">\(P(H_1|D)\)</span>, may be used instead. However, for this to work with <em>Spower</em> the argument <code>sig.direction = &#39;above&#39;</code> should be supplied, where <code>sig.level</code> now indicts that “significance” only occurs when an observation is above this cutoff.</p>
+<p>Below is one such Bayesian approach using posterior probabilities using the <code>BayesFactor</code> package, which is obtained by translating the Bayes factor output into a suitable posterior probability and focusing on the alternative hypothesis (hence, the posterior probability returned corresponds to <span class="math inline">\(P(\mu \ne \mu_0|D)\)</span>). The following also assumes that the competing hypotheses are equally likely when obtaining the posterior probability (hence, prior odds are 1:1).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>p_single.Bayes.t &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, mu){</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    g &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>mean)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>    res &lt;-<span class="st"> </span>BayesFactor<span class="op">::</span><span class="kw">ttestBF</span>(g, <span class="dt">mu=</span>mu)   </span>
+<span id="cb1-4"><a href="#cb1-4"></a>    bf &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">as.numeric</span>(res<span class="op">@</span>bayesFactor[<span class="dv">1</span>])) <span class="co"># Bayes factor</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>    posterior &lt;-<span class="st"> </span>bf <span class="op">/</span><span class="st"> </span>(bf <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># assuming hypotheses are equally likely</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>    posterior   <span class="co"># P(H_1|D)</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>}</span></code></pre></div>
+<p>For the Bayesian <span class="math inline">\(t\)</span>-test definition defined in the next code chunk evaluation, “significance” is obtained whenever the sample posterior is <em>greater</em> than <code>sig.level = .90</code>, demonstrating strong support of <span class="math inline">\(H_1\)</span>. Note that this is a more strict criteria than the null hypothesis criteria presented in the introduction vignette, and therefore has notably lower power.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># power cut-off for a significantly supportive posterior is &gt; 0.90</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">p_single.Bayes.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">mu=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">sig.level =</span> <span class="fl">.90</span>, <span class="dt">sig.direction =</span> <span class="st">&#39;above&#39;</span>)</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 5
+##       n  mean    mu sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100   0.5   0.3       0.9 NA   
+## 
+## Estimate of power: 0.143
+## 95% Confidence Interval: [0.136, 0.150]</code></pre>
+<p>With this approach, the power analysis criteria described in <code>help(Spower)</code> are now possible, where for instance solving other experimental components (such as the sample size <code>n</code>) are easy to setup by providing suitable <code>NA</code> argument flags.</p>
+</div>
+<div id="logical-returns" class="section level1">
+<h1>Logical returns</h1>
+<p>In many applications, it can be advantageous to directly return <code>logical</code> values direction in the simulation experiment rather than letting <code>Spower()</code> perform these threshold transformations as these can include more intricate experimental result requirements. The following showcases various ways that returning <code>logical</code> values works in the <code>Spower</code> package. Note that returning a logical in the simulation experiment necessarily means that the <code>sig.level</code> argument in <code>Spower()</code> and friends will not be used, and therefore suitable alternatives will have to be defined within the context of the simulation experiement code (e.g., including <code>conf.level</code>).</p>
+<div id="confidence-and-credible-intervals" class="section level2">
+<h2>Confidence (and credible) intervals</h2>
+<p>Keeping with the basic t-test experiment in the introduction vignetted, suppose we’re interested in the power to reject the null hypothesis <span class="math inline">\(H_0:\, \mu = \mu_0\)</span> in a one-sample <span class="math inline">\(t\)</span>-test scenario, where <span class="math inline">\(P(X|H_0\)</span>) is the probability of the data given the null hypothesis. Normally, one could simply write an experiment that returns a <span class="math inline">\(p\)</span>-value in this context, such as the following,</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>p_single.t &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu=</span><span class="dv">0</span>){</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    g &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>mean)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    p &lt;-<span class="st"> </span><span class="kw">t.test</span>(g, <span class="dt">mu=</span>mu)<span class="op">$</span>p.value</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    p</span>
+<span id="cb4-5"><a href="#cb4-5"></a>}</span></code></pre></div>
+<p>However, an equivalent way to explore power in this context would be to investigate the same null hypothesis via confidence intervals given a specific <span class="math inline">\(\alpha\)</span> level, where <span class="math inline">\(CI_\mu=[CI_{\alpha/2},CI_{1-\alpha/2}]\)</span>. If one were to take this approach, the define function must return a <code>logical</code> value instead, where the CI is utilize to evaluate the plausibility of <span class="math inline">\(\mu = \mu_0\)</span> by testing whether <span class="math inline">\(\mu_0\)</span> falls <em>outside</em> the advertised interval. Alternatively, if one were in a Bayesian context,
+one could use the <em>credible interval</em> instead of the confidence interval to construct the same logical output.</p>
+<p>The following code demonstrates this logic, assuming that <span class="math inline">\(\alpha = .05\)</span> (and therefore a two-tailed, 95% CI is used), and uses the <code>is.outside_CI()</code> function to evaluate whether <code>mu</code> falls within the estimated <code>CI</code> returned from <code>t.test()</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>l_single.t &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu=</span><span class="dv">0</span>, <span class="dt">conf.level=</span>.<span class="dv">95</span>){</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    g &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>mean)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    out &lt;-<span class="st"> </span><span class="kw">t.test</span>(g, <span class="dt">mu=</span>mu, <span class="dt">conf.level=</span>conf.level)</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    CI &lt;-<span class="st"> </span>out<span class="op">$</span>conf.int</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="kw">is.outside_CI</span>(mu, CI)   <span class="co"># equivalent to: !(CI[1] &lt; mu &amp;&amp; mu &lt; CI[2])</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>}</span>
+<span id="cb5-7"><a href="#cb5-7"></a></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="kw">l_single.t</span>(<span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>Running a power analysis with <code>Spower()</code> works out of the box now, where <code>p_single.t()</code> utilizes the <code>sig.level</code> argument in <code>Spower()</code> to construct an equivalent <code>TRUE/FALSE</code> expression internally, while <code>l_single.t()</code> ignores <code>sig.level</code> altogether.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">p_single.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100   0.3      0.05 NA   
+## 
+## Estimate of power: 0.851
+## 95% Confidence Interval: [0.844, 0.858]</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">l_single.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100   0.3      0.05 NA   
+## 
+## Estimate of power: 0.845
+## 95% Confidence Interval: [0.838, 0.852]</code></pre>
+</div>
+<div id="precision-criterion" class="section level2">
+<h2>Precision criterion</h2>
+<p>Using confidence or credible intervals are also useful in contexts where specific <em>precision</em> criteria are importance in power analysis contexts. Suppose that, in addition to detecting a particular effect of interest in a given sample, the results are only deemed “practically useful” if the resulting effect size inference are sufficiently precise, where precision is based on the width of the uncertainty interval. In this case, one may join the logic of the <span class="math inline">\(p\)</span>-value and CI approaches presented thus far to create a joint evaluation for power, where a result is deemed “significant” if the tests are null hypothesis test is “surprisingly” rejected (in the <span class="math inline">\(p\)</span>-value context) <em>and</em> the CI is sufficiently narrow.</p>
+<p>As a working example, suppose that the above experiment was generalized such that a meaningfully significant result would require the rejection of the null, <span class="math inline">\(\mu_0=0\)</span>, and that the width of the CI must be less than 1/4 units. What value of <span class="math inline">\(N\)</span> would be required to obtain such a significant and accurate inference to obtain a power of 80%?</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>l_precision &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, CI.width, <span class="dt">mu=</span><span class="dv">0</span>, <span class="dt">alpha=</span>.<span class="dv">05</span>){</span>
+<span id="cb11-2"><a href="#cb11-2"></a>    g &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>mean)</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    out &lt;-<span class="st"> </span><span class="kw">t.test</span>(g, <span class="dt">mu=</span>mu)</span>
+<span id="cb11-4"><a href="#cb11-4"></a>    CI &lt;-<span class="st"> </span>out<span class="op">$</span>conf.int</span>
+<span id="cb11-5"><a href="#cb11-5"></a>    width &lt;-<span class="st"> </span>CI[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>CI[<span class="dv">1</span>]</span>
+<span id="cb11-6"><a href="#cb11-6"></a>    out<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span>alpha <span class="op">&amp;&amp;</span><span class="st"> </span>width <span class="op">&lt;</span><span class="st"> </span>CI.width</span>
+<span id="cb11-7"><a href="#cb11-7"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">l_precision</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">2</span>, <span class="dt">CI.width=</span><span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">500</span>))</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA   0.2      0.05   0.8
+## 
+## Estimate of n: 273.3
+## 95% Prediction Interval: [272.7, 273.9]</code></pre>
+<p>Compared the required <span class="math inline">\(N\)</span> to an power analysis that just contains a significant result below this estimate is notably higher. Note that this can be evaluated in the above simulation experiment by setting <code>CI.width=Inf</code> as all widths will be accepted, though this could have equivalently been evaluated using <code>p_single.t()</code> defined earlier.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="kw">l_precision</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">2</span>, <span class="dt">CI.width=</span><span class="ot">Inf</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">500</span>))</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 5
+##       n  mean CI.width sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA   0.2      Inf      0.05   0.8
+## 
+## Estimate of n: 198.0
+## 95% Prediction Interval: [195.6, 200.5]</code></pre>
+</div>
+<div id="bayes-factors" class="section level2">
+<h2>Bayes Factors</h2>
+<p>If one were using a Bayesian analysis criteria, the Bayes factor (BF) ratio could be used in the logical return context too. For example, returning whether the observed <span class="math inline">\(BF&gt;3\)</span> in a given random sample indicates at least “moderate” supporting evidence for the hypothesis of interest compared to some competing hypothesis (often the complementary null, though not necessarily).</p>
+<p>The downside of focusing on BFs is that they require the computation of the marginal likelihoods, typically via bridge sampling (e.g., via the <code>bridgesampling</code> package), in addition to fitting the model using Markov chain Monte Carlo (MCMC) methods (e.g., <code>brms</code>, <code>rstan</code>, <code>rstanarm</code>). Though not a limitation per se, it is often more natural to focus directly on the sample from posterior distribution for power analysis applications rather than on the marginal Bayes factors. Nevertheless, such applications are possible with <code>Spower</code> if there is interest in doing so.</p>
+<p>As a simple example, the following one-sample <span class="math inline">\(t\)</span>-test initially defined above could be redefined as</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>l_single.Bayes.t_BF &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu=</span><span class="dv">0</span>, <span class="dt">bf.cut=</span><span class="dv">3</span>){</span>
+<span id="cb16-2"><a href="#cb16-2"></a>    g &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>mean)</span>
+<span id="cb16-3"><a href="#cb16-3"></a>    res &lt;-<span class="st"> </span>BayesFactor<span class="op">::</span><span class="kw">ttestBF</span>(g, <span class="dt">mu=</span>mu)   </span>
+<span id="cb16-4"><a href="#cb16-4"></a>    bf &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">as.numeric</span>(res<span class="op">@</span>bayesFactor[<span class="dv">1</span>])) <span class="co"># Bayes factor</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>    bf <span class="op">&gt;</span><span class="st"> </span>bf.cut</span>
+<span id="cb16-6"><a href="#cb16-6"></a>}</span></code></pre></div>
+<p>where by default a <code>TRUE</code> is returned if the Bayes factor is greater than 3 and <code>FALSE</code> otherwise. Evaluating this simulation with <span class="math inline">\(N=100\)</span>, <span class="math inline">\(\mu=.5\)</span>, and <span class="math inline">\(\mu_0=.3\)</span> gives the following power estimate when evaluating each sample against a Bayes factor cut-off of 3.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">l_single.Bayes.t_BF</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">mu=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 5
+##       n  mean    mu sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100   0.5   0.3      0.05 NA   
+## 
+## Estimate of power: 0.258
+## 95% Confidence Interval: [0.249, 0.266]</code></pre>
+</div>
+</div>
+<div id="regions-of-practical-equivalence-ropes" class="section level1">
+<h1>Regions of practical equivalence (ROPEs)</h1>
+<p>This section presents two related concepts for estimating the power where some justifiable equivalence interval is of interest.</p>
+<div id="equivalence-testing" class="section level2">
+<h2>Equivalence testing</h2>
+<p>As an alternative approach to the rejection of the null hypothesis via the <span class="math inline">\(p\)</span>-value or CI approaches, there may be interest in evaluating power in the context of establishing <em>equivalence</em>, or in directional cases <em>superiority</em> or <em>non-inferiority</em>. The purpose of an equivalence tests is to establish that, although exact effects may exist, they are small enough to be considered practically equal in applications. For example, in an independent samples <span class="math inline">\(t\)</span>-test, two groups might be considered “equivalent” if the true mean difference in the population is somewhere above <span class="math inline">\(\epsilon_L\)</span> but below <span class="math inline">\(\epsilon_U\)</span>, where <span class="math inline">\(\epsilon\)</span>s are used to define the equivalence interval. If, for instance, two groups are equivalent then the null hypotheses to test using the two one-sided test (TOST) logic are
+<span class="math display">\[H_{0a}:\, (\mu_1 - \mu_2) \le -\epsilon_L\]</span>
+and
+<span class="math display">\[H_{0b}:\,(\mu_1 - \mu_2) \ge \epsilon_U\]</span>
+Rejecting both of these null hypotheses leads to the induced complementary hypothesis of interest
+<span class="math display">\[H_1:\, \epsilon_L &lt; (\mu_1 - \mu_2) &lt; \epsilon_U\]</span>
+or in words, the population mean difference falls within the defined region of equivalence. Superiority testing and non-inferiority testing follow the same type of logic, however rather than defining a region of equivalence only one tail of the equivalence is of interest.</p>
+<p>To put numbers to the above expression, suppose that the true mean difference between the groups was <span class="math inline">\(\mu_d = \mu_1 - \mu_2 = 0.05\)</span>, however this effect is quite small and effectively equivalent to 0. Moreover, suppose any true difference that fell between <span class="math inline">\([-0.2, 0.2]\)</span> were determined to be practically equivalent a priori.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>l_equiv.t &lt;-<span class="st"> </span><span class="cf">function</span>(n, delta, equiv, <span class="dt">sds =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), </span>
+<span id="cb19-2"><a href="#cb19-2"></a>                      <span class="dt">sig.level =</span> <span class="fl">.025</span>){</span>
+<span id="cb19-3"><a href="#cb19-3"></a>    g1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span><span class="dv">0</span>, <span class="dt">sd=</span>sds[<span class="dv">1</span>])</span>
+<span id="cb19-4"><a href="#cb19-4"></a>    g2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>delta, <span class="dt">sd=</span>sds[<span class="dv">2</span>])</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    outL &lt;-<span class="st"> </span><span class="kw">t.test</span>(g2, g1, <span class="dt">mu=</span><span class="op">-</span>equiv[<span class="dv">1</span>], <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>)<span class="op">$</span>p.value</span>
+<span id="cb19-6"><a href="#cb19-6"></a>    outU &lt;-<span class="st"> </span><span class="kw">t.test</span>(g2, g1, <span class="dt">mu=</span>equiv[<span class="dv">2</span>], <span class="dt">alternative =</span> <span class="st">&quot;less&quot;</span>)<span class="op">$</span>p.value</span>
+<span id="cb19-7"><a href="#cb19-7"></a>    outL <span class="op">&lt;</span><span class="st"> </span>sig.level <span class="op">&amp;&amp;</span><span class="st"> </span>outU <span class="op">&lt;</span><span class="st"> </span>sig.level</span>
+<span id="cb19-8"><a href="#cb19-8"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">l_equiv.t</span>(<span class="dv">100</span>, <span class="dt">delta=</span><span class="dv">1</span>, <span class="dt">equiv=</span><span class="kw">c</span>(<span class="op">-</span><span class="fl">2.5</span>, <span class="fl">2.5</span>), </span>
+<span id="cb20-2"><a href="#cb20-2"></a>          <span class="dt">sds=</span><span class="kw">c</span>(<span class="fl">2.5</span>, <span class="fl">2.5</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n delta sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100     1      0.05 NA   
+## 
+## Estimate of power: 0.988
+## 95% Confidence Interval: [0.986, 0.990]</code></pre>
+<p>You can verify that these computations are correct by comparing to established software for now, such as via the <code>TOSTER</code> package.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>TOSTER<span class="op">::</span><span class="kw">power_t_TOST</span>(<span class="dt">n =</span> <span class="dv">100</span>,</span>
+<span id="cb22-2"><a href="#cb22-2"></a>             <span class="dt">delta =</span> <span class="dv">1</span>,</span>
+<span id="cb22-3"><a href="#cb22-3"></a>             <span class="dt">sd =</span> <span class="fl">2.5</span>,</span>
+<span id="cb22-4"><a href="#cb22-4"></a>             <span class="dt">eqb =</span> <span class="fl">2.5</span>,</span>
+<span id="cb22-5"><a href="#cb22-5"></a>             <span class="dt">alpha =</span> <span class="fl">.025</span>,</span>
+<span id="cb22-6"><a href="#cb22-6"></a>             <span class="dt">power =</span> <span class="ot">NULL</span>,</span>
+<span id="cb22-7"><a href="#cb22-7"></a>             <span class="dt">type =</span> <span class="st">&quot;two.sample&quot;</span>)</span></code></pre></div>
+<pre><code>     Two-sample TOST power calculation 
+
+          power = 0.9881517
+           beta = 0.01184831
+          alpha = 0.025
+              n = 100
+          delta = 1
+             sd = 2.5
+         bounds = -2.5, 2.5
+
+NOTE: n is number in *each* group</code></pre>
+<p>Again, the same type of logic can be evaluated using <code>CI</code>s alone.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>l_equiv.t_CI &lt;-<span class="st"> </span><span class="cf">function</span>(n, delta, equiv, </span>
+<span id="cb24-2"><a href="#cb24-2"></a>                         <span class="dt">sds=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">conf.level =</span> <span class="fl">.95</span>){</span>
+<span id="cb24-3"><a href="#cb24-3"></a>    g1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span><span class="dv">0</span>, <span class="dt">sd=</span>sds[<span class="dv">1</span>])</span>
+<span id="cb24-4"><a href="#cb24-4"></a>    g2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>delta, <span class="dt">sd=</span>sds[<span class="dv">2</span>])</span>
+<span id="cb24-5"><a href="#cb24-5"></a>    CI &lt;-<span class="st"> </span><span class="kw">t.test</span>(g2, g1, <span class="dt">conf.level=</span>conf.level)<span class="op">$</span>conf.int</span>
+<span id="cb24-6"><a href="#cb24-6"></a>    <span class="kw">is.CI_within</span>(CI, <span class="dt">interval=</span>equiv)  <span class="co"># returns TRUE if CI is within equiv interval</span></span>
+<span id="cb24-7"><a href="#cb24-7"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># an equivalent power analysis for &quot;equivalence tests&quot; via CI evaluations</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="kw">l_equiv.t_CI</span>(<span class="dv">100</span>, <span class="dt">delta=</span><span class="dv">1</span>, <span class="dt">equiv=</span><span class="kw">c</span>(<span class="op">-</span><span class="fl">2.5</span>, <span class="fl">2.5</span>), </span>
+<span id="cb25-3"><a href="#cb25-3"></a>          <span class="dt">sds=</span><span class="kw">c</span>(<span class="fl">2.5</span>, <span class="fl">2.5</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n delta sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100     1      0.05 NA   
+## 
+## Estimate of power: 0.987
+## 95% Confidence Interval: [0.984, 0.989]</code></pre>
+</div>
+<div id="bayesian-approach-to-ropes-hdi-rope" class="section level2">
+<h2>Bayesian approach to ROPEs (HDI + ROPE)</h2>
+<p>Finally, though not exhaustively, one could approach the topic of equivalence using Bayesian methods using draws from the posterior distribution of interest, such as from BUGS or HMC samplers (e.g., <code>stan</code>). This approach is highly similar to the equivalence testing approach described above, but uses highest density interval + ROPE in Bayesian modeling instead. Below is one such example that constructs a simple linear regression model with a binary <span class="math inline">\(X\)</span> term that is analysed with <code>rstanarm::stan_glm()</code>.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">library</span>(bayestestR)</span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="kw">library</span>(rstanarm)</span>
+<span id="cb27-3"><a href="#cb27-3"></a></span>
+<span id="cb27-4"><a href="#cb27-4"></a>p_rope.lm &lt;-<span class="st"> </span><span class="cf">function</span>(n, beta0, beta1, range, <span class="dt">sigma=</span><span class="dv">1</span>, ...){</span>
+<span id="cb27-5"><a href="#cb27-5"></a>    <span class="co"># generate data</span></span>
+<span id="cb27-6"><a href="#cb27-6"></a>    x &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">each=</span>n))</span>
+<span id="cb27-7"><a href="#cb27-7"></a>    y &lt;-<span class="st"> </span>beta0 <span class="op">+</span><span class="st"> </span>beta1 <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">nrow</span>(x), <span class="dt">sd=</span>sigma)</span>
+<span id="cb27-8"><a href="#cb27-8"></a>    dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(y, x)</span>
+<span id="cb27-9"><a href="#cb27-9"></a>    </span>
+<span id="cb27-10"><a href="#cb27-10"></a>    <span class="co"># run model, but tell stan_glm() to use its indoor voice</span></span>
+<span id="cb27-11"><a href="#cb27-11"></a>    model &lt;-<span class="st"> </span><span class="kw">quiet</span>(rstanarm<span class="op">::</span><span class="kw">stan_glm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data =</span> dat))</span>
+<span id="cb27-12"><a href="#cb27-12"></a>    rope &lt;-<span class="st"> </span>bayestestR<span class="op">::</span><span class="kw">rope</span>(model, <span class="dt">ci=</span><span class="dv">1</span>, <span class="dt">range=</span>range, <span class="dt">parameters=</span><span class="st">&quot;x&quot;</span>)</span>
+<span id="cb27-13"><a href="#cb27-13"></a>    <span class="kw">as.numeric</span>(rope)</span>
+<span id="cb27-14"><a href="#cb27-14"></a>}</span></code></pre></div>
+<p>In the above example, the proportion of the sampled posterior distribution that falls within the ROPE is returned, which works well with the <code>sig.level</code> argument coupled with <code>sig.direction = &#39;above&#39;)</code> in <code>Spower()</code> to define a suitable accept/reject cut-off. Specifically, if <code>sig.level = .95</code> and <code>sig.direction = &#39;above&#39;)</code> then the ROPE will only be accepted when the percentage of the posterior that falls within the defined ROPE is greater than 95%. This can of course be performed manually instead, returning a <code>TRUE</code> when satisfied and <code>FALSE</code> otherwise.</p>
+<p>Below reports a power estimate given <span class="math inline">\(N=50\times 2=100\)</span>, where the ROPE criteria is deemed satisfied/significant if 95% of the posterior distribution for the <span class="math inline">\(\beta_1=1\)</span> falls within the defined range of <span class="math inline">\(1 \pm .2\rightarrow [.8,1.2]\)</span>. Due to the slower execution speeds of the simulations the power evaluations are computed using <code>parallel=TRUE</code> to utilize all available cores.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">p_rope.lm</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">beta0=</span><span class="dv">2</span>, <span class="dt">beta1=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">range=</span><span class="kw">c</span>(.<span class="dv">8</span>, <span class="fl">1.2</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">sig.level=</span>.<span class="dv">95</span>, <span class="dt">sig.direction=</span><span class="st">&#39;above&#39;</span>, <span class="dt">parallel=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 5
+##       n beta0 beta1 sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1    50     2     1      0.95 NA   
+## 
+## Estimate of power: 0.142
+## 95% Confidence Interval: [0.135, 0.149]</code></pre>
+<p>Finally, to demonstrate why this might be useful, the following estimates the required sample size to achieve 80% power when using a 95% HDI-ROPE criteria.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">p_rope.lm</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">beta0=</span><span class="dv">2</span>, <span class="dt">beta1=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">range=</span><span class="kw">c</span>(.<span class="dv">8</span>, <span class="fl">1.2</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">sig.level=</span>.<span class="dv">95</span>, <span class="dt">sig.direction=</span><span class="st">&#39;above&#39;</span>,</span>
+<span id="cb30-3"><a href="#cb30-3"></a>           <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">200</span>), <span class="dt">parallel=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 5
+##       n beta0 beta1 sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA     2     1      0.95   0.8
+## 
+## Estimate of n: 107.7
+## 95% Prediction Interval: [107.0, 108.4]</code></pre>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

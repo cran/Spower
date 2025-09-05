@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Phil Chalmers" />
+
+<meta name="date" content="2025-09-05" />
+
+<title>Introdution to the Spower package</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introdution to the Spower package</h1>
+<h4 class="author">Phil Chalmers</h4>
+<h4 class="date">September 05, 2025</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#types-of-functions">Types of functions</a>
+<ul>
+<li><a href="#built-in-experiements">Built-in experiements</a></li>
+<li><a href="#user-defined-functions">User-defined functions</a></li>
+</ul></li>
+<li><a href="#types-of-power-analyses-to-evaluate">Types of power analyses to evaluate</a>
+<ul>
+<li><a href="#prospectivepost-hoc-power-analysis">Prospective/post-hoc power analysis</a></li>
+<li><a href="#compromise-power-analysis">Compromise power analysis</a></li>
+<li><a href="#a-priori-power-analysis">A priori power analysis</a></li>
+<li><a href="#sensitivity-power-analysis">Sensitivity power analysis</a></li>
+<li><a href="#criterion-power-analysis">Criterion power analysis</a></li>
+</ul></li>
+<li><a href="#multiple-power-evaluation-functions">Multiple power evaluation functions</a>
+<ul>
+<li><a href="#spowerbatch">SpowerBatch()</a></li>
+<li><a href="#spowercurve">SpowerCurve()</a></li>
+</ul></li>
+</ul>
+</div>
+
+<p>This vignette provides a brief introduction to using the package <code>Spower</code> for prospective/post-hoc, a priori, sensitivity, criterion, and compromise power analyses. For a more detailed description of the package refer to associated publication (Chalmers, in press) as well as the documentation found within the functions, particularly <code>Spower()</code>, <code>SpowerBatch()</code>, and <code>SpowerCurve()</code>.</p>
+<div id="types-of-functions" class="section level1">
+<h1>Types of functions</h1>
+<p>There are generally two-ways to go about using <code>Spower</code>; either by utilizing a handful of build-in simulation experiments with an associated analysis, or by constructing the simulation experiment yourself. In either case, the goal is to manipulate R code to perform a single simulation experiment and have the function return:</p>
+<ul>
+<li>A suitable <span class="math inline">\(p\)</span>-value under the null hypothesis, <span class="math inline">\(P(X|H_0)\)</span>, where the value of <code>sig.level</code> (<span class="math inline">\(\alpha\)</span>) indicates whether a sample was (<span class="math inline">\(P(D|H_0)&lt;\alpha\)</span>) or was not (<span class="math inline">\(P(D|H_0)\ge\alpha\)</span>) significant,</li>
+<li>The posterior probability of an alternative hypothesis, <span class="math inline">\(P(H_1|D)\)</span>, which is deemed ‘significant’ if greater than the defined <code>sig.level</code> to indicate that a sample supported (<span class="math inline">\(P(H_1|D)&gt;\alpha\)</span>) or did not support (<span class="math inline">\(P(H_1|D)\le\alpha\)</span>) the hypothesis of interest (requires setting <code>Spower(..., sig.direction = &#39;above&#39;)</code>), or</li>
+<li>A logical value indicating support for the hypothesis of interest (e.g., <code>TRUE</code> if rejecting the null; <code>TRUE</code> if supporting the alternative; some more complicated combination involving multiple hypothesis or regions or practical significance, etc)</li>
+</ul>
+<p>The package largely focuses on the first point as these are more common applications of power analysis, though nothing precludes the package from more complex power analysis tests and experiments. See the vignette <em>“Bayesian power analyses and logical vector returns”</em> for further examples involving CIs, ROPEs, equivalence tests, precision tests, and Bayes Factors.</p>
+<div id="built-in-experiements" class="section level2">
+<h2>Built-in experiements</h2>
+<p><code>Spower</code> ships with several common experiment structures, such as those involving linear regression models, mediation, ANOVAs, <span class="math inline">\(t\)</span>-tests, and so on. The simulation experiments are organized with the prefix <code>p_</code>, followed by the name of the analysis method. For instance,</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">p_lm.R2</span>(<span class="dv">50</span>, <span class="dt">k=</span><span class="dv">3</span>, <span class="dt">R2=</span>.<span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## [1] 0.004935905</code></pre>
+<p>performs a single simulation experiment reflecting the null hypothesis <span class="math inline">\(H_0:\, R^2=0\)</span> for a linear regression model with <span class="math inline">\(k=3\)</span> predictor variables and a sample size of <span class="math inline">\(N=50\)</span>. Translating this into a power-analysis simply requires passing this experiment in some form to <code>Spower()</code> (the details of which are discussed below), where in this case the estimate of power (<span class="math inline">\(1-\beta\)</span>) is returned.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">p_lm.R2</span>(<span class="dv">50</span>, <span class="dt">k=</span><span class="dv">3</span>, <span class="dt">R2=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>() </span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 5
+##       n    R2     k sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1    50   0.3     3      0.05 NA   
+## 
+## Estimate of power: 0.971
+## 95% Confidence Interval: [0.968, 0.974]</code></pre>
+<p>Each of these functions return a <span class="math inline">\(p\)</span>-value (<span class="math inline">\(P(D|H_0\)</span>) as this is the general information required to evaluate statistical power with <code>Spower()</code>. Alternatively, users may define their own simulation functions if the desired experiment has not been defined within the package.</p>
+</div>
+<div id="user-defined-functions" class="section level2">
+<h2>User-defined functions</h2>
+<p>As a very simple example, suppose one were interested in the power to reject the null hypothesis <span class="math inline">\(H_0:\, \mu = \mu_0\)</span> in a one-sample <span class="math inline">\(t\)</span>-test scenario, where <span class="math inline">\(P(D|H_0\)</span>) is the probability of the data given the null hypothesis. While the package already supports this (see <code>help(p_t.test)</code>), users may write their own version of this experiment, one instance of which may look like the following.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>p_single.t &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu=</span><span class="dv">0</span>){</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    g &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>mean)</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    p &lt;-<span class="st"> </span><span class="kw">t.test</span>(g, <span class="dt">mu=</span>mu)<span class="op">$</span>p.value</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    p</span>
+<span id="cb5-5"><a href="#cb5-5"></a>}</span></code></pre></div>
+<p>Using the defaults of this defined function evaluates whether a sample of data drawn from a Gaussian distribution with some specific <code>mean</code> (<span class="math inline">\(\mu\)</span>) differs from the value of <span class="math inline">\(mu = 0\)</span> (<span class="math inline">\(\mu_0\)</span>). Hence, the <span class="math inline">\(p\)</span>-value returned from this experiments reflects the null hypothesis <span class="math inline">\(H_0:\, \mu=\mu_0\)</span>, or more specifically <span class="math inline">\(H_0:\, \mu=0\)</span>, for a single generated dataset.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># a single experiment</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">p_single.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.06328707</code></pre>
+</div>
+</div>
+<div id="types-of-power-analyses-to-evaluate" class="section level1">
+<h1>Types of power analyses to evaluate</h1>
+<p>For power analyses there are typically four parameters that are/can be manipulated or solved in a given experiment: the <span class="math inline">\(\alpha\)</span> level (Type I error, often reflexively set to <span class="math inline">\(\alpha=.05\)</span>), power (the complement of the Type II error, <span class="math inline">\(1-\beta\)</span>), an effect size of interest, and the sample size. Given three of these values, the fourth can always be solved. Note that this description reflects a rule-of-thumb as there may be multiple effect sizes of interest, multiple sample sizes (e.g., in the form of cluster sizes in multi-level models), and so on. In <code>Spower()</code> switching between these types of power analysis criteria is done simply by explicitly specifying which parameter is missing (<code>NA</code>), as demonstrated below.</p>
+<div id="prospectivepost-hoc-power-analysis" class="section level2">
+<h2>Prospective/post-hoc power analysis</h2>
+<p>The canonical setup for <code>Spower()</code> will evaluate prospective or post-hoc power, thereby obtaining the estimate <span class="math inline">\(1-\hat{\beta}\)</span>. Default in <code>Spower()</code> uses <span class="math inline">\(10,000\)</span> independent simulation <code>replications</code>. The following provides an estimate of power given the null hypothesis <span class="math inline">\(H_0:\, \mu=0.3\)</span>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">p_single.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">mu=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>() -&gt;<span class="st"> </span>prospective</span>
+<span id="cb8-2"><a href="#cb8-2"></a>prospective</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 5
+##       n  mean    mu sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100   0.5   0.3      0.05 NA   
+## 
+## Estimate of power: 0.515
+## 95% Confidence Interval: [0.505, 0.525]</code></pre>
+</div>
+<div id="compromise-power-analysis" class="section level2">
+<h2>Compromise power analysis</h2>
+<p>Compromise power analysis involves manipulating the <span class="math inline">\(\alpha\)</span> level until some sufficient balance between the Type I and Type II error rates are met, expressed in terms of the ratio <span class="math inline">\(q=\frac{\beta}{\alpha}\)</span>.</p>
+<p>In <code>Spower</code>, there are two ways to approach this criterion. The first way, which focuses on the <code>beta_alpha</code> ratio at the outset, simply requires passing the target ratio to <code>Spower()</code> using the same setup as the previous prospective power analysis.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">p_single.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">mu=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">beta_alpha=</span><span class="dv">4</span>) -&gt;<span class="st"> </span>compromise</span>
+<span id="cb10-3"><a href="#cb10-3"></a>compromise</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 6
+##       n  mean    mu sig.level power beta_alpha
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;      &lt;dbl&gt;
+## 1   100   0.5   0.3        NA NA             4
+## 
+## Estimate of Type I error rate (alpha/sig.level): 0.093
+## 95% Confidence Interval: [0.087, 0.098]
+## 
+## Estimate of power (1-beta): 0.629
+## 95% Confidence Interval: [0.620, 0.638]</code></pre>
+<p>This returns the estimated <code>sig.level</code> (<span class="math inline">\(\hat{\alpha}\)</span>) and resulting <span class="math inline">\(\hat{\beta}\)</span> that satisfies the target <span class="math inline">\(q\)</span> ratio.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># satisfies q = 4 ratio</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">with</span>(compromise, (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>power) <span class="op">/</span><span class="st"> </span>sig.level)</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<p>The second way to perform a compromise analysis is to re-use a previous evaluation of a prospective power analysis as this contains all the necessary information.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># using previous post-hoc/prospective power analysis</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="kw">update</span>(prospective, <span class="dt">beta_alpha=</span><span class="dv">4</span>)</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 6
+##       n  mean    mu sig.level power beta_alpha
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;      &lt;dbl&gt;
+## 1   100   0.5   0.3        NA NA             4
+## 
+## Estimate of Type I error rate (alpha/sig.level): 0.093
+## 95% Confidence Interval: [0.088, 0.099]
+## 
+## Estimate of power (1-beta): 0.627
+## 95% Confidence Interval: [0.617, 0.636]</code></pre>
+<p>In either case, the use of <code>update()</code> can be beneficial as the stored result can be reused with alternative <code>beta_alpha</code> values without having to generate and analyse new experimental data.</p>
+</div>
+<div id="a-priori-power-analysis" class="section level2">
+<h2>A priori power analysis</h2>
+<p>The goal of a priori power analysis is generally to obtain the sample size (<span class="math inline">\(N\)</span>) associated with a specific power rate of interest (e.g., <span class="math inline">\(1-\beta=.90\)</span>), which is useful in the context of future data collection.</p>
+<p>To estimate the sample size using Monte Carlo simulation experiments, <code>Spower()</code> performs stochastic root solving using the ProBABLI approach from the <code>SimDesign</code> package, and requires a specific search <code>interval</code> to search within. The width of the interval should reflect a plausible range where the researcher believes the solution to lie, however this may be quite large as well as ProBABLI is less influenced by the range of the interval (Chalmers, 2024).</p>
+<p>Below the sample size <code>n</code> is solved to achieve a target power of <span class="math inline">\(1-\beta=.80\)</span>, where the solution was suspected to lie somewhere between the search <code>interval = c(20, 200)</code>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">p_single.t</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">5</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">8</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">20</span>,<span class="dv">200</span>))</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA   0.5      0.05   0.8
+## 
+## Estimate of n: 32.8
+## 95% Prediction Interval: [32.4, 33.1]</code></pre>
+</div>
+<div id="sensitivity-power-analysis" class="section level2">
+<h2>Sensitivity power analysis</h2>
+<p>Similar to a priori power analysis, however the goal is now to find some specific standardized or unstandardized effect size associated with a specific power rate. This pertains to the question of how large an effect size must be in order to reliably detect the effect of interest.</p>
+<p>Below the sample size is fixed at <span class="math inline">\(N=100\)</span>, while the search interval for the standardized effect size <span class="math inline">\(d\)</span> is searched between the <code>interval = c(.1, 3)</code>. Note that the use of decimals in the interval tells <code>Spower()</code> to use a continuous rather than discrete search space (cf. with a priori, which uses an integer search space for the simulation replicates).</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">p_single.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span><span class="ot">NA</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">8</span>, <span class="dt">interval=</span><span class="kw">c</span>(.<span class="dv">1</span>, <span class="dv">3</span>))</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1   100    NA      0.05   0.8
+## 
+## Estimate of mean: 0.281
+## 95% Prediction Interval: [0.280, 0.283]</code></pre>
+</div>
+<div id="criterion-power-analysis" class="section level2">
+<h2>Criterion power analysis</h2>
+<p>Finally, in criterion power analysis the goal is to located the associated <span class="math inline">\(\alpha\)</span> level (<code>sig.level</code>) require to achieve a target power output holding constant the other modeling information. This is done in <code>Spower()</code> by setting the <code>sig.level</code> input to <code>NA</code> while providing values for the other parameters. Note that no search interval is require in this context as <span class="math inline">\(\alpha\)</span> necessarily lies between the interval <span class="math inline">\([0,1]\)</span>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">p_single.t</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">mean=</span>.<span class="dv">5</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">8</span>, <span class="dt">sig.level=</span><span class="ot">NA</span>)</span></code></pre></div>
+<pre><code>## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    50   0.5        NA   0.8
+## 
+## Estimate of sig.level: 0.010
+## 95% Prediction Interval: [0.009, 0.010]</code></pre>
+</div>
+</div>
+<div id="multiple-power-evaluation-functions" class="section level1">
+<h1>Multiple power evaluation functions</h1>
+<p>The following functions, <code>SpowerBatch()</code> and <code>SpowerCurve()</code>, can be used to evaluate and visualize power analysis results across a range on inputs rather than for a single set of fixed inputs. This section demonstrate their general usage as the specifications slightly differ from that of <code>Spower()</code>, despite the fact that <code>Spower()</code> is the underlying estimation engine.</p>
+<div id="spowerbatch" class="section level2">
+<h2>SpowerBatch()</h2>
+<p>To begin, suppose that there was interest in evaluating the <code>p_single.t()</code> function across multiple <span class="math inline">\(n\)</span> inputs to obtain estimates of <span class="math inline">\(1-\beta\)</span>. While this could be performed using independent calls to <code>Spower()</code>, the function <code>SpowerBatch()</code> can instead be used, where the variable inputs can be specified in vector format. For instance, given the effect size <span class="math inline">\(\mu=.5\)</span>, what would be the power to reject the null hypothesis <span class="math inline">\(H_0:\, \mu=0\)</span> across three different sample sizes.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">p_single.t</span>(<span class="dt">mean=</span>.<span class="dv">5</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="st">    </span><span class="kw">SpowerBatch</span>(<span class="dt">n=</span><span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">90</span>)) -&gt;<span class="st"> </span>prospective.batch</span>
+<span id="cb22-3"><a href="#cb22-3"></a>prospective.batch</span></code></pre></div>
+<pre><code>## $CONDITION_1
+## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1    30   0.5      0.05 NA   
+## 
+## Estimate of power: 0.752
+## 95% Confidence Interval: [0.743, 0.760]
+## 
+## $CONDITION_2
+## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1    60   0.5      0.05 NA   
+## 
+## Estimate of power: 0.967
+## 95% Confidence Interval: [0.963, 0.970]
+## 
+## $CONDITION_3
+## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1    90   0.5      0.05 NA   
+## 
+## Estimate of power: 0.996
+## 95% Confidence Interval: [0.995, 0.997]</code></pre>
+<p>This can further be coerced to a <code>data.frame</code> object if there is reason to do so (e.g., for plotting purpose).</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="kw">as.data.frame</span>(prospective.batch)</span></code></pre></div>
+<pre><code>##    n mean sig.level  power
+## 1 30  0.5      0.05 0.7516
+## 2 60  0.5      0.05 0.9669
+## 3 90  0.5      0.05 0.9963</code></pre>
+<p>Similarly, if the were related to a priori analyses for sample size planning then the inputs to <code>SpowerBatch()</code> would be modified to set <code>n</code> to the missing quantity.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>apriori.batch &lt;-<span class="st"> </span><span class="kw">p_single.t</span>(<span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">n=</span><span class="ot">NA</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb26-2"><a href="#cb26-2"></a><span class="st">    </span><span class="kw">SpowerBatch</span>(<span class="dt">power=</span><span class="kw">c</span>(.<span class="dv">7</span>, <span class="fl">.8</span>, <span class="fl">.9</span>), <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">20</span>, <span class="dv">200</span>)) </span>
+<span id="cb26-3"><a href="#cb26-3"></a>apriori.batch</span></code></pre></div>
+<pre><code>## $CONDITION_1
+## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA   0.5      0.05   0.7
+## 
+## Estimate of n: 26.7
+## 95% Prediction Interval: [26.5, 27.0]
+## 
+## $CONDITION_2
+## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA   0.5      0.05   0.8
+## 
+## Estimate of n: 33.3
+## 95% Prediction Interval: [32.9, 33.7]
+## 
+## $CONDITION_3
+## 
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA   0.5      0.05   0.9
+## 
+## Estimate of n: 44.4
+## 95% Prediction Interval: [43.8, 44.8]</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="kw">as.data.frame</span>(apriori.batch)</span></code></pre></div>
+<pre><code>##          n mean sig.level power
+## 1 26.71726  0.5      0.05   0.7
+## 2 33.31082  0.5      0.05   0.8
+## 3 44.36998  0.5      0.05   0.9</code></pre>
+</div>
+<div id="spowercurve" class="section level2">
+<h2>SpowerCurve()</h2>
+<p>Often times researchers wish to visualize the results of power analyses in the form of graphical representations. <code>Spower</code> supports various types of visualizations through the function <code>SpowerCurve()</code>, which creates power curve plots of previously obtained results (e.g., via <code>SpowerBatch()</code>) or for to-be-explored inputs. Importantly, each graphic contains estimates of the Monte Carlo sampling uncertainty to deter over-interpretation of any resulting point-estimates.</p>
+<p>To demonstrate, suppose one were interested in visualizing the power for the running single-sample <span class="math inline">\(t\)</span> test across four different sample sizes, <span class="math inline">\(N=[30,60,90,120]\)</span>. To do this requires passing the simulation experiment and varying information to the function <code>SpowerCurve()</code>, which fills in the variable information to the supplied simulation experiment and plots the resulting output.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">p_single.t</span>(<span class="dt">mean=</span>.<span class="dv">5</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="st">    </span><span class="kw">SpowerCurve</span>(<span class="dt">n=</span><span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Alternatively, were the above information already evaluated using <code>SpowerBatch()</code> then this <code>batch</code> object could be passed directly to <code>SpowerCurve()</code>, thereby avoiding the need to re-evaluate the simulation experiments.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># pass previous SpowerBatch() object</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="kw">SpowerCurve</span>(<span class="dt">batch=</span>batch)</span></code></pre></div>
+<p><code>SpowerCurve()</code> will accept as many arguments as exists in the supplied simulation experiment definition, however it will only plot the first three variable input specifications as anything past this becomes more difficult to display automatically. Below is an example that varies both the <code>n</code> input as well as the input <code>mean</code>, where the first input appears on the <span class="math inline">\(x\)</span>-axis while the second is mapped to the default colour aesthetic in <code>ggplot2</code>.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="kw">p_single.t</span>() <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="st">    </span><span class="kw">SpowerCurve</span>(<span class="dt">n=</span><span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">90</span>, <span class="dv">120</span>), <span class="dt">mean=</span><span class="kw">c</span>(.<span class="dv">2</span>, <span class="fl">.5</span>, <span class="fl">.8</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
