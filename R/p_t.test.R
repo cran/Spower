@@ -7,7 +7,8 @@
 #' have equal variance by default, however these may be modified.
 #'
 #' @param n sample size per group, assumed equal across groups
-#' @param d Cohen's standardized effect size \code{d}
+#' @param d Cohen's standardized effect size \code{d}. For the generated data this standardized
+#'   mean appears in the first group (two-sample)/first time point (paired samples)
 #' @param mu population mean to test against
 #' @param r (optional) instead of specifying \code{d} specify
 #'   a point-biserial correlation. Internally this is transformed
@@ -21,13 +22,18 @@
 #'   when \code{type = 'two.sample'}
 #' @param means (optional) vector of means for each group.
 #'   When specified the input \code{d} is ignored
-#' @param sds (optional) vector of SDs for each group.
-#'   When specified the input \code{d} is ignored
+#' @param sds (optional) vector of SDs for each group. If not specified and \code{d}
+#'  is used then these are set to a vector of 1's
+#' @param conf.level confidence interval level passed
+#'   to \code{\link[stats]{t.test}}
 #' @param gen_fun function used to generate the required two-sample data.
-#'   Object returned must be a \code{data.frame} with the columns
-#'   \code{"DV"} and \code{"group"}. Default uses \code{\link{gen_t.test}}
+#'   Object returned must be a \code{list} containing one (one-sample) or
+#'   two (independent samples/paired samples) elements,
+#'   both of which are \code{numeric} vectors. Default uses \code{\link{gen_t.test}}
 #'   to generate conditionally Gaussian distributed samples.
 #'   User defined version of this function must include the argument \code{...}
+#' @param return_analysis logical; return the analysis object for further
+#'   extraction and customization?
 #' @param ... additional arguments to be passed to \code{gen_fun}. Not used
 #'   unless a customized \code{gen_fun} is defined
 #'
@@ -51,6 +57,9 @@
 #' # paired and one-sample tests
 #' p_t.test(n=50, d=0.5, type = 'paired')
 #' p_t.test(n=50, d=0.5, type = 'one.sample')
+#'
+#' # return analysis object
+#' p_t.test(n=50, d=0.5, return_analysis=TRUE)
 #'
 #' \donttest{
 #'   # compare simulated results to pwr package
@@ -85,18 +94,14 @@
 #' 	     #   then add std mean difference
 #' 	     group1 <- ((group1 + df1) / sqrt(2*df1))
 #' 	     group2 <- ((group2 - df2) / sqrt(2*df2)) + d
-#' 	     dat <- data.frame(DV=c(group1, group2),
-#' 	        			   group=gl(2, n, labels=c('G1', 'G2')))
+#' 	     dat <- list(group1, group2)
 #' 	     dat
 #' }
 #'
 #' # check the sample data properties
-#' df <- my.gen_fun(n=10000, d=.5, df1=10, df2=5)
-#' with(df, tapply(DV, group, mean))
-#' with(df, tapply(DV, group, sd))
-#'
-#' library(ggplot2)
-#' ggplot(df, aes(group, DV, fill=group)) + geom_violin()
+#' dat <- my.gen_fun(n=10000, d=.5, df1=10, df2=5)
+#' sapply(dat, mean)
+#' sapply(dat, sd)
 #'
 #' p_t.test(n=100, d=0.5, gen_fun=my.gen_fun, df1=10, df2=5)
 #'
@@ -117,11 +122,10 @@
 #' }
 #'
 #' @export
-p_t.test <- function(n, d, mu = 0, r = NULL,
-					 type = c('two.sample', 'one.sample', 'paired'),
+p_t.test <- function(n, d, mu = 0, r = NULL, type = 'two.sample',
 					 n2_n1 = 1, two.tailed = TRUE, var.equal = TRUE,
-					 means=NULL, sds=NULL, gen_fun=gen_t.test, ...) {
-	type <- match.arg(type)
+					 means=NULL, sds=NULL, conf.level = .95,
+					 gen_fun=gen_t.test, return_analysis = FALSE, ...) {
 	if(is.null(means))
 		if(!missing(d) && !is.null(r))
 			stop('Please use either d or r')
@@ -131,26 +135,25 @@ p_t.test <- function(n, d, mu = 0, r = NULL,
 	}
 	dat <- gen_fun(n=n, n2_n1=n2_n1, d=d, r=r, type=type,
 				   means=means, sds=sds, ...)
-	p <- if(type == 'paired'){
-		lvls <- levels(dat$group)
-		group1 <- with(dat, DV[group == lvls[1]])
-		group2 <- with(dat, DV[group == lvls[2]])
-		t.test(group1, group2, mu=mu, paired=TRUE)$p.value
+	res <- if(type == 'paired'){
+		t.test(dat[[1]], dat[[2]], mu=mu,
+			   paired=TRUE, conf.level=conf.level)
 	} else if(type == 'two.sample'){
-		t.test(DV ~ group, dat, var.equal=var.equal, mu=mu)$p.value
+		t.test(dat[[1]], dat[[2]], var.equal=var.equal,
+			   mu=mu, conf.level=conf.level)
 	} else if(type == 'one.sample') {
-		t.test(dat$DV, mu=mu)$p.value
+		t.test(dat[[1]], mu=mu, conf.level=conf.level)
 	}
+	if(return_analysis) return(res)
+	p <- res$p.value
 	p <- ifelse(two.tailed, p, p/2)
 	p
 }
 
 #' @rdname p_t.test
 #' @export
-gen_t.test <- function(n, d, n2_n1 = 1, r = NULL,
-					   type = c('two.sample', 'one.sample', 'paired'),
+gen_t.test <- function(n, d, n2_n1 = 1, r = NULL, type = 'two.sample',
 					   means=NULL, sds=NULL, ...){
-	type <- match.arg(type)
 	if(!is.null(r)){
 		type <- 'two.sample'
 		d <- r2d(r, n0=n, n1=n*n2_n1)
@@ -164,18 +167,18 @@ gen_t.test <- function(n, d, n2_n1 = 1, r = NULL,
 	if(type == 'one.sample'){
 		DV <- if(!is.null(means))
 			rnorm(n, mean=means, sd=sds) else rnorm(n, mean=d)
-		dat <- data.frame(DV=DV)
+		dat <- list(DV)
 	} else {
 		if(!is.null(means)){
 			if(!missing(d)) stop('d argument cannot be used with raw_info')
 			group1 <- rnorm(n, mean=means[1], sd=sds[1])
 			group2 <- rnorm(n * n2_n1, mean=means[2], sd=sds[2])
 		} else {
-			group1 <- rnorm(n)
-			group2 <- rnorm(n * n2_n1, mean=d)
+			if(is.null(sds)) sds <- c(1,1)
+			group1 <- rnorm(n, mean=d, sd = sds[1])
+			group2 <- rnorm(n * n2_n1, sd = sds[2])
 		}
-		dat <- data.frame(group = factor(rep(c('G1', 'G2'), times=c(n, n*n2_n1))),
-						  DV = c(group1, group2))
+		dat <- list(group1, group2)
 	}
 	dat
 }

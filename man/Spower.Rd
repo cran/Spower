@@ -25,7 +25,7 @@ Spower(
   ncores = parallelly::availableCores(omit = 1L),
   predCI = 0.95,
   predCI.tol = 0.01,
-  verbose = TRUE,
+  verbose = interactive(),
   check.interval = FALSE,
   maxiter = 150,
   wait.time = NULL,
@@ -47,12 +47,13 @@ SpowerBatch(
   sig.direction = "below",
   replications = 10000,
   integer,
+  fully.crossed = TRUE,
   parallel = FALSE,
   cl = NULL,
   ncores = parallelly::availableCores(omit = 1L),
   predCI = 0.95,
   predCI.tol = 0.01,
-  verbose = TRUE,
+  verbose = interactive(),
   check.interval = FALSE,
   maxiter = 150,
   wait.time = NULL,
@@ -79,7 +80,7 @@ SpowerCurve(
   ncores = parallelly::availableCores(omit = 1L),
   predCI = 0.95,
   predCI.tol = 0.01,
-  verbose = TRUE,
+  verbose = interactive(),
   check.interval = FALSE,
   maxiter = 50,
   wait.time = NULL,
@@ -103,9 +104,17 @@ above \code{sig.level} are flagged as significant, which is useful
 in Bayesian posterior probability contexts that focus on the alternative
 hypothesis, \eqn{P(H_1|D)}.
 
-Alternatively, a \code{logical} vector can be returned (e.g., when using confidence intervals (CIs) or
+Alternatively, a \code{logical} vector can be returned (e.g., when using
+confidence intervals (CIs) or
 evaluating regions of practical equivalence (ROPEs)), where the average of these
 TRUE/FALSE vector corresponds to the empirical power.
+
+Finally, a named \code{list} or \code{data.frame} can be returned instead
+if there is need for more general, heterogeneous objects, however a specific
+element to extract must be specified
+using the \code{select} argument to indicate which of the list elements
+are to be used in the power computations. All other elements from the simulation can, however, be
+extracted from the \code{\link[SimDesign]{SimResults}} function.
 
 For \code{\link{SpowerCurve}} and \code{\link{SpowerBatch}},
 first expression input must be identical to \code{...} in
@@ -185,7 +194,9 @@ for stochastic root solver convergence (see \code{\link[SimDesign]{SimSolve}}).
 Default converges when the power rate CI is consistently
 within \code{.01/2} of the target power}
 
-\item{verbose}{logical; should information be printed to the console?}
+\item{verbose}{logical; should information be printed to the console?
+By default this is determined based on whether the session is interactive
+or not}
 
 \item{check.interval}{logical; check the interval range validity
 (see \code{\link[SimDesign]{SimSolve}}). Disabled by default}
@@ -220,7 +231,11 @@ summarizing of the stored results (applicable only with prospective/post-hoc pow
 \item{x}{object of class \code{'Spower'}. If \code{\link{SpowerBatch}} were used
 the this will be a \code{list}}
 
-\item{plotCI}{logical; include confidence/prediction intervals in plots?}
+\item{fully.crossed}{logical; should the supplied conditions to
+\code{SpowerBatch} be fully crossed? Passed to the same
+argument documented in \code{\link[SimDesign]{createDesign}}}
+
+\item{plotCI}{logical; include confidence/predicted confidence intervals in plots?}
 
 \item{plotly}{logical; draw the graphic into the interactive \code{plotly}
 interface? If \code{FALSE} the ggplot2 object will be returned instead}
@@ -244,7 +259,7 @@ Function provides a general wrapper to the
 \code{SimDesign} package's \code{\link[SimDesign]{runSimulation}} and
 \code{\link[SimDesign]{SimSolve}} functions. As such, parallel processing is
 automatically supported, along with progress bars,
-confidence/prediction intervals for the results estimates, safety checks,
+confidence/predicted confidence intervals for the results estimates, safety checks,
 and more.
 
 The function \code{\link{SpowerBatch}}, on the other hand, can be used to
@@ -256,7 +271,7 @@ Can also be used as a pre-computing step before using
 
 \code{\link{SpowerCurve}} draws power curves that either a) estimate the power given a
 set of varying conditions or b) solves a set of root conditions
-given fixed values of power. Confidence/prediction intervals are
+given fixed values of power. Confidence/predicted confidence intervals are
 included in the output to reflect the estimate uncertainties, though note
 that fewer replications/iterations are used compared to
 \code{\link{Spower}} as the goal is visualization of competing
@@ -564,6 +579,12 @@ ndbatch
 
 # plot with SpowerCurve()
 SpowerCurve(batch=ndbatch)
+
+# For non-crossed experimental combinations, pass fully.crossed = FALSE. Note
+# that this requires the lengths of the inputs to match
+p_t.test() |> SpowerBatch(n=c(30, 90, 270),
+           d=c(.2, .5, .8), replications=1000, fully.crossed=FALSE) -> batch3
+
 
 }
 

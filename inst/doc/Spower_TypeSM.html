@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Phil Chalmers" />
+
+<meta name="date" content="2025-10-16" />
+
+<title>Type M and Type S errors</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Type M and Type S errors</h1>
+<h4 class="author">Phil Chalmers</h4>
+<h4 class="date">October 16, 2025</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#type-s-errors-via-simulation">Type S errors via simulation</a>
+<ul>
+<li><a href="#manual-specification">Manual specification</a></li>
+<li><a href="#implementation-using-built-in-p_t.test-function">Implementation using built-in <code>p_t.test()</code> function</a></li>
+</ul></li>
+<li><a href="#type-m-errors-via-simulation">Type M errors via simulation</a></li>
+</ul>
+</div>
+
+<p><em>Gelman, A., &amp; Carlin, J. (2014). Beyond Power
+Calculations: Assessing Type S (Sign) and Type M (Magnitude) Errors.
+Perspectives on Psychological Science, 9(6), 641-651.
+<a href="https://doi.org/10.1177/1745691614551642" class="uri">https://doi.org/10.1177/1745691614551642</a></em></p>
+<p>In the publication above, Gelman and Carlin (2014) present <em>conditional</em> power analysis ideas to investigate <em>Type S</em> and <em>Type M</em> errors,
+which add augmentations to the usual evaluation of power via the average (expected) rejection of <span class="math inline">\(H_0\)</span> or support
+for <span class="math inline">\(H_1\)</span> across independent samples. Specifically:</p>
+<ul>
+<li><strong>Type S errors</strong> occur when a null hypothesis is confidently
+rejected in light of the alternative being true, however
+<em>the rejection is in the wrong direction of the underlying effect</em>. Hence,
+conditional on a “statistical significance” decision, what is the
+probability that the correct sign was inferred?
+<ul>
+<li>Ideally Type S errors should be close to 0.</li>
+<li>In the limiting case, where <span class="math inline">\(H_0\)</span> is true (no effect at all), then<br />
+Type S errors will be .50 as the sign will be a coin-flip</li>
+<li>Type S errors are particularly prevalent in under powered
+research studies, where the sampling variability could result in
+detection of an effect that happens to be <em>opposite</em> what should
+have been detected from the population generating structure</li>
+</ul></li>
+<li><strong>Type M errors</strong>, on the other hand, occur when the <em>magnitude</em> of
+a detected effect is <em>much larger</em> than the expected effect given that
+“statistical significance” has occurred.
+<ul>
+<li>Gelman and Carlin (2014) presented this as a ratio idea
+(<span class="math inline">\(M=E(\frac{|estimate|}{parameter})\)</span>), where large ratios
+indicate that the estimate had to be on average that many times higher than
+the expected value of the parameter (e.g., a Type M ratio of 8
+indicates that of those effect sizes flagged as significant the
+effect estimate had to be on average 8 times larger than the
+true parameter).</li>
+</ul></li>
+</ul>
+<p>Note that while the ratio for Type M errors gets at the idea nicely as it indicates a type of conditional
+“exaggeration” effect, nothing really precludes us from drawing further lines in the sand to better map
+this concept into a power framework. For instance, if we would only be
+confidence that our sample size is “large enough” if we only treat <span class="math inline">\(M\)</span> ratios
+less than, say, 2 or 3, then <code>TRUE/FALSE</code> values
+could be used to indicate that the observed sample has passed the desired
+<span class="math inline">\(M\)</span> cut-off.</p>
+<div id="type-s-errors-via-simulation" class="section level1">
+<h1>Type S errors via simulation</h1>
+<p>To demonstrate how to estimate Type S errors via simulation,
+the following simulation experiment
+performs a two-sample <span class="math inline">\(t\)</span>-test with a “small” effect size (Cohen’s <span class="math inline">\(d=.2\)</span>)
+with smaller sample sizes. The first implementation demonstrate the logic with
+a user-defined data generation and analysis, while the second approach demonstrates how
+the <code>p_*</code> functions defined within <code>Spower</code> can be used instead — provided that they
+are relevant to the power analysis under investigation.</p>
+<div id="manual-specification" class="section level2">
+<h2>Manual specification</h2>
+<p>In the manual implementation, where the user write both the data generation and analysis components themselves into a single function, the use of a <code>while()</code> loop is required to generate and analyse the experiment until a significant <span class="math inline">\(p\)</span>-value is observed. When observed, the <code>while()</code> loop is then terminated as the generated data matches the conditional significance criterion, at which point the subsequent analyses relevant to the compliment of Type S error (the <em>correct</em> sign decision) is returned as a <code>logical</code> so that conditional power will be reflected in the output.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>l_two.t_correct.sign &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu =</span> <span class="dv">0</span>, <span class="dt">alpha =</span> <span class="fl">.05</span>, ...){</span>
+<span id="cb1-2"><a href="#cb1-2"></a>    <span class="cf">while</span>(<span class="ot">TRUE</span>){</span>
+<span id="cb1-3"><a href="#cb1-3"></a>        g1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>        g2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>mean)</span>
+<span id="cb1-5"><a href="#cb1-5"></a>        out &lt;-<span class="st"> </span><span class="kw">t.test</span>(g2, g1, <span class="dt">mu=</span>mu, ...)</span>
+<span id="cb1-6"><a href="#cb1-6"></a>        <span class="cf">if</span>(out<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span>alpha) <span class="cf">break</span>   <span class="co"># if &quot;significant&quot; then break while() loop</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>    }</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    mean_diff &lt;-<span class="st"> </span><span class="kw">unname</span>(out<span class="op">$</span>estimate[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>out<span class="op">$</span>estimate[<span class="dv">2</span>])</span>
+<span id="cb1-9"><a href="#cb1-9"></a>    mean_diff <span class="op">&gt;</span><span class="st"> </span>mu                      <span class="co"># return TRUE if the correct sign is observed</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dt">n=</span><span class="dv">15</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
+<pre><code>## 
+## Execution time (H:M:S): 00:00:06
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1    15   0.2      0.05 NA   
+## 
+## Estimate of power: 0.924
+## 95% Confidence Interval: [0.919, 0.929]</code></pre>
+<p>From the output from <code>Spower()</code>, the <code>power</code> information reflects the
+estimated probability that the correct sign
+decision was made given that “significance” was observed, while <span class="math inline">\(1-power\)</span>
+provides the estimate of the associated Type S error (probability of an incorrect sign
+given significance). As can be seen, there is about a 0.9241 probability of making the
+correct sign decision about the true effect, and a complimentary
+probability estimate of 0.0759 of making a Type S error.</p>
+<p>With <code>Spower</code>, it’s of course possible to evaluate other input properties
+associated with these power values. For instance, suppose that we wish
+to know the requisite sample size such that Type S errors are made with very
+little frequency (hence, high conditional sign power). Further suppose we
+only want to make a Type S error, say, 1/100 times a significant effect
+is observed. The following code evaluates how to obtain such an <span class="math inline">\(n\)</span> estimate.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>typeS &lt;-<span class="st"> </span><span class="fl">.01</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span><span class="dv">1</span><span class="op">-</span>typeS, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">200</span>))</span></code></pre></div>
+<pre><code>## 
+## Execution time (H:M:S): 00:00:07
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA   0.2      0.05  0.99
+## 
+## Estimate of n: 47.7
+## 95% Predicted Confidence Interval: [44.1, 51.7]</code></pre>
+<p>Hence, one would need a sample size of approximately
+48 per group in order to have a Type S error be
+approximately 1%.</p>
+</div>
+<div id="implementation-using-built-in-p_t.test-function" class="section level2">
+<h2>Implementation using built-in <code>p_t.test()</code> function</h2>
+<p>Alternatively, if the simulation function and analysis already appear in the context
+of the package definition then <code>Spower</code>’s internally defined <code>p_*</code> functions can be used
+in place of the complete manual implementation. This is beneficial as the data generation and analysis components then
+do not need to be written by the front-end user, potentially avoiding implementation issues using
+previously defined simulation experiment code.</p>
+<p>As a reminder, the default <code>p_*</code> functions in the package always return a <span class="math inline">\(p\)</span>-value under the
+null hypothesis specified as this is the canonical way in which power analysis via simulation
+is explored (cf. posterior probability approaches). However, these simulation experiment functions
+also contain a logical argument <code>return_analysis</code>, which if set to <code>TRUE</code> will return the complete analysis
+object instead of just the extracted <span class="math inline">\(p\)</span>-value (most commonly in the element <code>p.value</code>, though
+please use functions like <code>str()</code> to inspect fully). For Type M/S errors multiple components are clearly
+required, and therefore further information should be extracted from the analysis objects directly to accommodate.</p>
+<p>To demonstrate, the built-in function <code>p_t.test()</code> is used with the <code>return_analysis = TRUE</code> argument.
+The simulation experiment still follows the <code>while()</code> loop logic to ensure that “significance” is first flagged,
+however the internal function definitions now provide the data generation and analyses so that the front-end
+user does not have to.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>l_two.t_correct.sign &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu =</span> <span class="dv">0</span>, <span class="dt">alpha =</span> <span class="fl">.05</span>, ...){</span>
+<span id="cb6-2"><a href="#cb6-2"></a>    <span class="cf">while</span>(<span class="ot">TRUE</span>){</span>
+<span id="cb6-3"><a href="#cb6-3"></a>        <span class="co"># return_analysis argument used to return model object</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>        out &lt;-<span class="st"> </span><span class="kw">p_t.test</span>(<span class="dt">n=</span>n, <span class="dt">d=</span>mean, <span class="dt">mu=</span>mu, <span class="dt">return_analysis=</span><span class="ot">TRUE</span>, ...)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>        <span class="cf">if</span>(out<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span>alpha) <span class="cf">break</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>    }</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    mean_diff &lt;-<span class="st"> </span><span class="kw">unname</span>(out<span class="op">$</span>estimate[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>out<span class="op">$</span>estimate[<span class="dv">2</span>])</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    mean_diff <span class="op">&gt;</span><span class="st"> </span>mu</span>
+<span id="cb6-9"><a href="#cb6-9"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>Setting the sample size to <span class="math inline">\(N=30\)</span> (hence, <code>n=15</code>) leads to the following power estimates.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dt">n=</span><span class="dv">15</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
+<pre><code>## 
+## Execution time (H:M:S): 00:00:19
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1    15   0.2      0.05 NA   
+## 
+## Estimate of power: 0.925
+## 95% Confidence Interval: [0.920, 0.930]</code></pre>
+<p>If at all possible it is recommended to use the <code>return_analysis</code> approach as the simulation experiments defined within the package have all been well tested. The trade-off, as it is with all higher-level functions in R, is that there will often be slightly more overhead than user-defined functions, though of course the latter approach comes at the cost of safety.</p>
+</div>
+</div>
+<div id="type-m-errors-via-simulation" class="section level1">
+<h1>Type M errors via simulation</h1>
+<p>Continuing with the above two-sample <span class="math inline">\(t\)</span>-test structure, suppose we’re interested in
+minimizing Type M errors to ensure that significant results weren’t
+due to higher sampling variability, ultimately resulting in significance being raised only when
+unreasonably large effect sizes estimates are observed. For the purpose of
+this power demonstration, suppose “unreasonably large” is defined such
+that the ratio of the absolute (standardized) mean difference in a two-sample <span class="math inline">\(t\)</span>-test,
+which was flagged as significant, was larger than three times the value of
+the true (standardized) mean difference (hence, <code>M.ratio = 3</code>).</p>
+<p>Note that while focusing on an <code>M.ratio = 3</code> provides the sufficient means to study
+Type M errors using a cut-off logic to define power, it is also possible to store
+the observed <span class="math inline">\(M\)</span> values for further inspection too, which can be done
+in <code>Spower</code> if a <code>list</code> or
+<code>data.frame</code> is returned from the supplied experiment. For this to behave correctly,
+however, output information relevant to the <code>power</code> computations
+(probability values/logicals) must be explicitly specified using
+<code>Spower(..., select)</code> so that other values returned from the simulation are
+stored but not summarised.</p>
+<p>As before, the first step is to define the experiment using the conditional
+<span class="math inline">\(p\)</span>-value logic nested within a <code>while()</code> loop, followed by the power (and extra) criteria of interest.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>l_two.t_typeM &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu =</span> <span class="dv">0</span>, </span>
+<span id="cb11-2"><a href="#cb11-2"></a>                          <span class="dt">alpha =</span> <span class="fl">.05</span>, <span class="dt">M.ratio =</span> <span class="dv">3</span>, ...){</span>
+<span id="cb11-3"><a href="#cb11-3"></a>    <span class="cf">while</span>(<span class="ot">TRUE</span>){</span>
+<span id="cb11-4"><a href="#cb11-4"></a>        <span class="co"># return_analysis argument used to return model object</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>        out &lt;-<span class="st"> </span><span class="kw">p_t.test</span>(<span class="dt">n=</span>n, <span class="dt">d=</span>mean, <span class="dt">mu=</span>mu, <span class="dt">return_analysis=</span><span class="ot">TRUE</span>, ...)</span>
+<span id="cb11-6"><a href="#cb11-6"></a>        <span class="cf">if</span>(out<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span>alpha) <span class="cf">break</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a>    }</span>
+<span id="cb11-8"><a href="#cb11-8"></a>    diff &lt;-<span class="st"> </span><span class="kw">unname</span>(out<span class="op">$</span>estimate[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>out<span class="op">$</span>estimate[<span class="dv">2</span>])</span>
+<span id="cb11-9"><a href="#cb11-9"></a>    M &lt;-<span class="st"> </span><span class="kw">abs</span>(diff)<span class="op">/</span>mean</span>
+<span id="cb11-10"><a href="#cb11-10"></a>    <span class="co"># return data.frame, where &quot;retain&quot; indicates the (logical) power information</span></span>
+<span id="cb11-11"><a href="#cb11-11"></a>    <span class="kw">data.frame</span>(<span class="dt">retain=</span>M <span class="op">&lt;</span><span class="st"> </span>M.ratio, <span class="dt">M=</span>M)</span>
+<span id="cb11-12"><a href="#cb11-12"></a>}</span></code></pre></div>
+<p>With <span class="math inline">\(N=50\)</span> per group and a “small” standardized effect size of .2 gives
+the following.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># only use the &quot;retain&quot; information to compute power, though store the rest</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="kw">l_two.t_typeM</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">select=</span><span class="st">&#39;retain&#39;</span>) -&gt;<span class="st"> </span>typeM</span>
+<span id="cb12-3"><a href="#cb12-3"></a>typeM</span></code></pre></div>
+<pre><code>## 
+## Execution time (H:M:S): 00:00:13
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1    50   0.2      0.05 NA   
+## 
+## Estimate of power: 0.861
+## 95% Confidence Interval: [0.854, 0.868]</code></pre>
+<p>In this case, <code>power</code> represents the probability that, given a
+significant result was observed, the resulting <span class="math inline">\(M\)</span> ratio was less than the
+cutoff of 3 (hence, was less than three times the true effect size). The
+compliment, which reflects the Type M error, is then 0.139,
+which is indeed quite high as approximately
+14% of the samples flagged as
+significant would have needed rather large observed effects to indicate that the
+sample was “unusual” in the statistical significance sense.</p>
+<p>With respect to the distribution of the observed <span class="math inline">\(M\)</span> values themselves, these can
+be further extracted using <code>SimResults()</code>. Notice that when plotted, the rejection magnitudes are not normally distributed,
+which is to be expected given the nature of the conditional simulation experiment.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>results &lt;-<span class="st"> </span><span class="kw">SimResults</span>(typeM)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>results</span></code></pre></div>
+<pre><code>## # A tibble: 10,000 × 5
+##        n  mean sig.level retain     M
+##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;  &lt;dbl&gt;
+##  1    50   0.2      0.05 TRUE    2.47
+##  2    50   0.2      0.05 TRUE    2.44
+##  3    50   0.2      0.05 TRUE    2.57
+##  4    50   0.2      0.05 TRUE    2.52
+##  5    50   0.2      0.05 TRUE    2.16
+##  6    50   0.2      0.05 FALSE   3.59
+##  7    50   0.2      0.05 TRUE    1.78
+##  8    50   0.2      0.05 TRUE    2.21
+##  9    50   0.2      0.05 TRUE    2.79
+## 10    50   0.2      0.05 FALSE   3.38
+## # ℹ 9,990 more rows</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">with</span>(results, <span class="kw">c</span>(<span class="dt">mean=</span><span class="kw">mean</span>(M), <span class="dt">SD=</span><span class="kw">sd</span>(M), <span class="dt">min=</span><span class="kw">min</span>(M), <span class="dt">max=</span><span class="kw">max</span>(M)))</span></code></pre></div>
+<pre><code>##      mean        SD       min       max 
+## 2.4863313 0.4696919 1.6198006 5.3105530</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">hist</span>(results<span class="op">$</span>M, <span class="dv">30</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Finally, increasing the sample size greatly helps with the Type M
+issues, as seen below by doubling the sample size below.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># double the total sample size</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">l_two.t_typeM</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">select=</span><span class="st">&#39;retain&#39;</span>) -&gt;<span class="st"> </span>typeM2</span>
+<span id="cb19-3"><a href="#cb19-3"></a>typeM2</span></code></pre></div>
+<pre><code>## 
+## Execution time (H:M:S): 00:00:09
+## Design conditions: 
+## 
+## # A tibble: 1 × 4
+##       n  mean sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100   0.2      0.05 NA   
+## 
+## Estimate of power: 0.991
+## 95% Confidence Interval: [0.989, 0.993]</code></pre>
+<p>where the Type M error for the <span class="math inline">\(M.ratio = 3\)</span> cutoff is now</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>last &lt;-<span class="st"> </span><span class="kw">getLastSpower</span>()</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>last<span class="op">$</span>power</span></code></pre></div>
+<pre><code>## [1] 0.0088</code></pre>
+<p>so approximately 1% of the significant results would have been due to
+an overly large effect size estimate. Again, the distributional
+properties of the observed <span class="math inline">\(M\)</span> values can be extracted and further
+analyzed should the need arise.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>results &lt;-<span class="st"> </span><span class="kw">SimResults</span>(typeM2)</span>
+<span id="cb23-2"><a href="#cb23-2"></a>results</span></code></pre></div>
+<pre><code>## # A tibble: 10,000 × 5
+##        n  mean sig.level retain     M
+##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;  &lt;dbl&gt;
+##  1   100   0.2      0.05 TRUE    1.43
+##  2   100   0.2      0.05 TRUE    1.45
+##  3   100   0.2      0.05 TRUE    1.83
+##  4   100   0.2      0.05 TRUE    1.72
+##  5   100   0.2      0.05 TRUE    1.98
+##  6   100   0.2      0.05 TRUE    1.61
+##  7   100   0.2      0.05 TRUE    2.01
+##  8   100   0.2      0.05 TRUE    2.52
+##  9   100   0.2      0.05 TRUE    1.48
+## 10   100   0.2      0.05 TRUE    1.49
+## # ℹ 9,990 more rows</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">with</span>(results, <span class="kw">c</span>(<span class="dt">mean=</span><span class="kw">mean</span>(M), <span class="dt">SD=</span><span class="kw">sd</span>(M), <span class="dt">min=</span><span class="kw">min</span>(M), <span class="dt">max=</span><span class="kw">max</span>(M)))</span></code></pre></div>
+<pre><code>##      mean        SD       min       max 
+## 1.8333941 0.3667748 1.2174419 4.4615467</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">hist</span>(results<span class="op">$</span>M, <span class="dv">30</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Type M errors are of course intimately related to <em>precision criteria</em>
+in power analyses, and in that sense are an alternative way of looking
+at power planning to help from relying on “extreme” observations.
+Personally, the notion of thinking in
+terms of “ratios relative to the true population effect size” feels somewhat
+unnatural, though the point is obviously important as seeing
+significance flagged only when unreasonably large effect sizes occur is
+indeed troubling (e.g., replication issues).</p>
+<p>In contrast then, I would recommend using precision-based power planning
+over focusing explicitly on Type M errors when power planning as this
+seems more natural, where obtaining greater precision in the target estimates
+will necessarily decrease the number of Type M error in both the “extreme”
+and “underwhelming” sense of the effect size estimates (the ladder of
+which Type M errors do not address as they do not focus on non-significant results
+by definition). More importantly, precision criteria are framed in the
+metric of the parameters relevant to the data analyst rather than on
+a metricless effect size ratio, which in general should be more natural to specify.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

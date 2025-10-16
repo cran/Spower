@@ -4,7 +4,8 @@ set.seed(42)
 formals(SpowerCurve)$plotly <- FALSE
 
 ## ----include=FALSE------------------------------------------------------------
-eval <- FALSE  # set to FALSE for normal run
+eval <- as.logical(Sys.getenv("SPOWER_EVAL"))
+if(is.na(eval)) eval <- FALSE  # set to FALSE for normal run
 store <- list()
 if(!eval)
 	store <- readRDS(system.file("intro.rds", package = 'Spower'))

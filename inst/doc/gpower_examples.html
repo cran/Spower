@@ -12,7 +12,7 @@
 
 <meta name="author" content="Phil Chalmers" />
 
-<meta name="date" content="2025-06-28" />
+<meta name="date" content="2025-10-14" />
 
 <title>G*Power examples evaluated with Spower</title>
 
@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">G*Power examples evaluated with Spower</h1>
 <h4 class="author">Phil Chalmers</h4>
-<h4 class="date">2025-06-28</h4>
+<h4 class="date">2025-10-14</h4>
 
 
 <div id="TOC">
@@ -409,6 +409,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">p_r</span>(<span class="dt">n =</span> <span class="ot">NA</span>, <span class="dt">r =</span> <span class="fl">.65</span>, <span class="dt">rho =</span> <span class="fl">.60</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power =</span> <span class="fl">.95</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">500</span>,<span class="dv">3000</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:21
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -417,7 +418,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 1    NA  0.65   0.6      0.05  0.95
 ## 
 ## Estimate of n: 1931.4
-## 95% Prediction Interval: [1901.1, 1958.2]</code></pre>
+## 95% Predicted Confidence Interval: [1901.1, 1958.2]</code></pre>
 <p>G*power estimates <span class="math inline">\(n\)</span> to be 1929 using the same Fisher z-transformation approximation.</p>
 </div>
 <div id="test-against-constant-rho_00" class="section level3">
@@ -425,6 +426,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Unlike the previous section, this is the more canonical version of the hypotheses involving correlation coefficients. Power associated with <span class="math inline">\(\rho = .3\)</span> with 100 pairs of observations, tested against <span class="math inline">\(\rho_0=0\)</span>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">p_r</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">r =</span> <span class="fl">.3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:11
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -438,6 +440,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">p_r</span>(<span class="dt">n =</span> <span class="ot">NA</span>, <span class="dt">r =</span> <span class="fl">.3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power =</span> <span class="fl">.95</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">50</span>,<span class="dv">1000</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:17
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -446,7 +449,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 1    NA   0.3      0.05  0.95
 ## 
 ## Estimate of n: 138.3
-## 95% Prediction Interval: [136.1, 140.4]</code></pre>
+## 95% Predicted Confidence Interval: [136.1, 140.4]</code></pre>
 <p>Compare to approximate result from <code>pwr</code> package.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>pwr<span class="op">::</span><span class="kw">pwr.r.test</span>(<span class="dt">r=</span>.<span class="dv">3</span>, <span class="dt">power=</span>.<span class="dv">95</span>, <span class="dt">n=</span><span class="ot">NULL</span>)</span></code></pre></div>
 <pre><code>## 
@@ -464,6 +467,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb9-2"><a href="#cb9-2"></a>n2_n1 &lt;-<span class="st"> </span><span class="dv">51</span><span class="op">/</span>n</span>
 <span id="cb9-3"><a href="#cb9-3"></a><span class="kw">p_2r</span>(<span class="dt">n=</span>n, <span class="dt">r.ab1=</span>.<span class="dv">75</span>, <span class="dt">r.ab2=</span>.<span class="dv">88</span>, <span class="dt">n2_n1=</span>n2_n1) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:26
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -482,6 +486,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb11-3"><a href="#cb11-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power =</span> <span class="fl">.95</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">200</span>))</span>
 <span id="cb11-4"><a href="#cb11-4"></a>out</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:19
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -490,7 +495,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 1    NA  0.25 FALSE           0.05  0.95
 ## 
 ## Estimate of n: 81.1
-## 95% Prediction Interval: [79.4, 82.7]</code></pre>
+## 95% Predicted Confidence Interval: [79.4, 82.7]</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># total sample size required</span></span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="kw">ceiling</span>(out<span class="op">$</span>n) <span class="op">*</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
 <pre><code>## [1] 164</code></pre>
@@ -541,6 +546,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <span id="cb23-5"><a href="#cb23-5"></a><span class="kw">p_prop.test</span>(<span class="dt">n=</span><span class="dv">20</span>, <span class="dt">prop=</span>p, <span class="dt">pi=</span>pi, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span></span>
 <span id="cb23-6"><a href="#cb23-6"></a><span class="st">    </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:04
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -556,6 +562,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <span id="cb25-2"><a href="#cb25-2"></a><span class="kw">p_prop.test</span>(<span class="dt">n=</span><span class="dv">20</span>, <span class="dt">prop=</span>p, <span class="dt">pi=</span>pi, <span class="dt">exact=</span><span class="ot">TRUE</span>, </span>
 <span id="cb25-3"><a href="#cb25-3"></a>            <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:04
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -572,6 +579,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">p_wilcox.test</span>(<span class="dt">n=</span><span class="dv">649</span>, <span class="dt">d=</span>.<span class="dv">1</span>, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb27-2"><a href="#cb27-2"></a><span class="st">    </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:20
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 6
@@ -583,24 +591,18 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 ## 95% Confidence Interval: [0.786, 0.802]</code></pre>
 <p>G*power gives the power estimate of .800.</p>
 <p>The following partially recreates the simulation results in Figure 29 (which itself was partially extracted from Shieh, Jan, and Randles, 2007) for the <em>Gaussian(0,1)</em> distribution with varying sample sizes and effect sizes. The target was to obtain “approximate power of <span class="math inline">\(1-\beta = .80\)</span>”, though how these sample sizes were decided upon was not specified. <code>Spower()</code>’s stochastic root-solving approach would likely get closer to more optimal <span class="math inline">\(N\)</span> estimates were these the target of the analyses.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>combos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">n=</span><span class="kw">c</span>(<span class="dv">649</span>, <span class="dv">164</span>, <span class="dv">42</span>, <span class="dv">20</span>, <span class="dv">12</span>, <span class="dv">9</span>),</span>
-<span id="cb29-2"><a href="#cb29-2"></a>                     <span class="dt">d=</span><span class="kw">c</span>(.<span class="dv">1</span>, <span class="fl">.2</span>, <span class="fl">.4</span>, <span class="fl">.6</span>, <span class="fl">.8</span>, <span class="fl">1.0</span>))</span>
-<span id="cb29-3"><a href="#cb29-3"></a></span>
-<span id="cb29-4"><a href="#cb29-4"></a>out &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(combos), \(i){</span>
-<span id="cb29-5"><a href="#cb29-5"></a>    <span class="kw">p_wilcox.test</span>(<span class="dt">n=</span>combos<span class="op">$</span>n[i], <span class="dt">d=</span>combos<span class="op">$</span>d[i], </span>
-<span id="cb29-6"><a href="#cb29-6"></a>                  <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">replications =</span> <span class="dv">50000</span>)</span>
-<span id="cb29-7"><a href="#cb29-7"></a>})</span>
-<span id="cb29-8"><a href="#cb29-8"></a></span>
-<span id="cb29-9"><a href="#cb29-9"></a><span class="co"># For Gaussian(0,1)</span></span>
-<span id="cb29-10"><a href="#cb29-10"></a>combos<span class="op">$</span>power &lt;-<span class="st"> </span><span class="kw">sapply</span>(out, \(x) x<span class="op">$</span>power)</span>
-<span id="cb29-11"><a href="#cb29-11"></a>combos</span></code></pre></div>
-<pre><code>##     n   d  power
-## 1 649 0.1 0.7983
-## 2 164 0.2 0.8014
-## 3  42 0.4 0.7966
-## 4  20 0.6 0.8096
-## 5  12 0.8 0.8026
-## 6   9 1.0 0.8461</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># For Gaussian(0,1)</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>out &lt;-<span class="st"> </span><span class="kw">p_wilcox.test</span>(<span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb29-3"><a href="#cb29-3"></a><span class="st">    </span><span class="kw">SpowerBatch</span>(<span class="dt">n=</span><span class="kw">c</span>(<span class="dv">649</span>, <span class="dv">164</span>, <span class="dv">42</span>, <span class="dv">20</span>, <span class="dv">12</span>, <span class="dv">9</span>),</span>
+<span id="cb29-4"><a href="#cb29-4"></a>                <span class="dt">d=</span><span class="kw">c</span>(.<span class="dv">1</span>, <span class="fl">.2</span>, <span class="fl">.4</span>, <span class="fl">.6</span>, <span class="fl">.8</span>, <span class="fl">1.0</span>), <span class="dt">replications =</span> <span class="dv">50000</span>, <span class="dt">fully.crossed=</span><span class="ot">FALSE</span>)</span>
+<span id="cb29-5"><a href="#cb29-5"></a><span class="kw">as.data.frame</span>(out)</span></code></pre></div>
+<pre><code>##     n   d       type two.tailed sig.level  power
+## 1 649 0.1 one.sample      FALSE      0.05 0.7983
+## 2 164 0.2 one.sample      FALSE      0.05 0.8014
+## 3  42 0.4 one.sample      FALSE      0.05 0.7966
+## 4  20 0.6 one.sample      FALSE      0.05 0.8096
+## 5  12 0.8 one.sample      FALSE      0.05 0.8026
+## 6   9 1.0 one.sample      FALSE      0.05 0.8461</code></pre>
 <div id="laplace01-version" class="section level4">
 <h4>Laplace(0,1) version</h4>
 <p>A one-sample sign test with Laplace distribution as the parent:</p>
@@ -614,6 +616,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <span id="cb31-8"><a href="#cb31-8"></a><span class="kw">p_wilcox.test</span>(<span class="dt">n=</span><span class="dv">11</span>, <span class="dt">d=</span>.<span class="dv">8</span>, <span class="dt">parent1=</span>parent, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>,</span>
 <span id="cb31-9"><a href="#cb31-9"></a>              <span class="dt">two.tailed=</span><span class="ot">FALSE</span>, <span class="dt">correct =</span> <span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:03
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 7
@@ -625,24 +628,19 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 ## 95% Confidence Interval: [0.789, 0.805]</code></pre>
 <p>G*power gives the estimate .830, which seems somewhat high (see below).</p>
 <p>The following partially recreates the simulation results in Figure 29 for the <em>Laplace(0,1)</em> distribution with varying sample sizes and effect sizes. The target was to obtain “approximate power of <span class="math inline">\(1-\beta = .80\)</span>”, though how these sample sizes were decided upon was not specified. <code>Spower()</code>’s stochastic root-solving approach would likely get closer to more optimal <span class="math inline">\(N\)</span> estimates were these the target of the analyses.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>combos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">n=</span><span class="kw">c</span>(<span class="dv">419</span>, <span class="dv">109</span>, <span class="dv">31</span>, <span class="dv">16</span>, <span class="dv">11</span>, <span class="dv">8</span>),</span>
-<span id="cb33-2"><a href="#cb33-2"></a>                          <span class="dt">d=</span><span class="kw">c</span>(.<span class="dv">1</span>, <span class="fl">.2</span>, <span class="fl">.4</span>, <span class="fl">.6</span>, <span class="fl">.8</span>, <span class="fl">1.0</span>))</span>
-<span id="cb33-3"><a href="#cb33-3"></a></span>
-<span id="cb33-4"><a href="#cb33-4"></a>out &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(combos), \(i){</span>
-<span id="cb33-5"><a href="#cb33-5"></a>    <span class="kw">p_wilcox.test</span>(<span class="dt">n=</span>combos<span class="op">$</span>n[i], <span class="dt">d=</span>combos<span class="op">$</span>d[i], <span class="dt">parent1=</span>parent, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>,</span>
-<span id="cb33-6"><a href="#cb33-6"></a>              <span class="dt">two.tailed=</span><span class="ot">FALSE</span>, <span class="dt">correct =</span> <span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">replications =</span> <span class="dv">50000</span>)</span>
-<span id="cb33-7"><a href="#cb33-7"></a>})</span>
-<span id="cb33-8"><a href="#cb33-8"></a></span>
-<span id="cb33-9"><a href="#cb33-9"></a><span class="co"># For Laplace(0,1)</span></span>
-<span id="cb33-10"><a href="#cb33-10"></a>combos<span class="op">$</span>power &lt;-<span class="st"> </span><span class="kw">sapply</span>(out, \(x) x<span class="op">$</span>power)</span>
-<span id="cb33-11"><a href="#cb33-11"></a>combos</span></code></pre></div>
-<pre><code>##     n   d  power
-## 1 419 0.1 0.8017
-## 2 109 0.2 0.8012
-## 3  31 0.4 0.8027
-## 4  16 0.6 0.7979
-## 5  11 0.8 0.8043
-## 6   8 1.0 0.7738</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="co"># For Laplace(0,1)</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a>out &lt;-<span class="st"> </span><span class="kw">p_wilcox.test</span>(<span class="dt">parent1=</span>parent, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>,</span>
+<span id="cb33-3"><a href="#cb33-3"></a>              <span class="dt">two.tailed=</span><span class="ot">FALSE</span>, <span class="dt">correct =</span> <span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb33-4"><a href="#cb33-4"></a><span class="st">    </span><span class="kw">SpowerBatch</span>(<span class="dt">n=</span><span class="kw">c</span>(<span class="dv">419</span>, <span class="dv">109</span>, <span class="dv">31</span>, <span class="dv">16</span>, <span class="dv">11</span>, <span class="dv">8</span>),</span>
+<span id="cb33-5"><a href="#cb33-5"></a>                <span class="dt">d=</span><span class="kw">c</span>(.<span class="dv">1</span>, <span class="fl">.2</span>, <span class="fl">.4</span>, <span class="fl">.6</span>, <span class="fl">.8</span>, <span class="fl">1.0</span>), <span class="dt">replications=</span><span class="dv">50000</span>, <span class="dt">fully.crossed=</span><span class="ot">FALSE</span>)</span>
+<span id="cb33-6"><a href="#cb33-6"></a><span class="kw">as.data.frame</span>(out)</span></code></pre></div>
+<pre><code>##     n   d       type correct two.tailed sig.level  power
+## 1 419 0.1 one.sample   FALSE      FALSE      0.05 0.8017
+## 2 109 0.2 one.sample   FALSE      FALSE      0.05 0.8012
+## 3  31 0.4 one.sample   FALSE      FALSE      0.05 0.8027
+## 4  16 0.6 one.sample   FALSE      FALSE      0.05 0.7979
+## 5  11 0.8 one.sample   FALSE      FALSE      0.05 0.8043
+## 6   8 1.0 one.sample   FALSE      FALSE      0.05 0.7738</code></pre>
 </div>
 </div>
 <div id="example-5.3-two-dependent-proportions-test-mcnemars-test" class="section level3">
@@ -658,6 +656,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">p_mcnemar.test</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">prop=</span>obrien2002, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span></span>
 <span id="cb37-2"><a href="#cb37-2"></a><span class="st">        </span><span class="kw">Spower</span>(<span class="dt">replications=</span><span class="dv">30000</span>)</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:07
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -671,6 +670,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="kw">p_mcnemar.test</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">prop=</span>obrien2002, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>, <span class="dt">correct=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb39-2"><a href="#cb39-2"></a><span class="st">    </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:02
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -688,6 +688,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <h3>Example 7.3</h3>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">p_lm.R2</span>(<span class="dt">n=</span><span class="dv">95</span>, <span class="dt">R2=</span>.<span class="dv">1</span>, <span class="dt">k=</span><span class="dv">5</span>, <span class="dt">fixed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:15
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 6
@@ -706,6 +707,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <h3>Example 13.1</h3>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">p_lm.R2</span>(<span class="dt">n=</span><span class="dv">95</span>, <span class="dt">R2=</span>.<span class="dv">1</span>, <span class="dt">k=</span><span class="dv">5</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:43
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -722,6 +724,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <p>Note that <code>k</code> is total IVs, <code>k.R2_0</code> is number of IVs for baseline model.</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="kw">p_lm.R2</span>(<span class="dt">n=</span><span class="dv">90</span>, <span class="dt">R2=</span>.<span class="dv">3</span>, <span class="dt">k=</span><span class="dv">9</span>, <span class="dt">R2_0=</span>.<span class="dv">25</span>, <span class="dt">k.R2_0=</span><span class="dv">5</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">sig.level=</span>.<span class="dv">01</span>)</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:55
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 7
@@ -735,6 +738,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="kw">p_lm.R2</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">R2=</span>.<span class="dv">3</span>, <span class="dt">R2_0 =</span> <span class="fl">.25</span>, <span class="dt">k=</span><span class="dv">9</span>, <span class="dt">k.R2_0=</span><span class="dv">5</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb47-2"><a href="#cb47-2"></a><span class="st">        </span><span class="kw">Spower</span>(<span class="dt">sig.level=</span>.<span class="dv">01</span>, <span class="dt">power=</span>.<span class="dv">8</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">400</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:03:00
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 7
@@ -743,7 +747,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 ## 1    NA   0.3     9  0.25      5      0.01   0.8
 ## 
 ## Estimate of n: 242.4
-## 95% Prediction Interval: [240.9, 244.0]</code></pre>
+## 95% Predicted Confidence Interval: [240.9, 244.0]</code></pre>
 <p>G*power gives <span class="math inline">\(n = 242\)</span>.</p>
 </div>
 <div id="example-14.3b" class="section level3">
@@ -752,6 +756,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a><span class="kw">p_lm.R2</span>(<span class="dt">n=</span><span class="dv">200</span>, <span class="dt">R2=</span>.<span class="dv">16</span>, <span class="dt">R2_0 =</span> <span class="fl">.1</span>, <span class="dt">k=</span><span class="dv">12</span>, <span class="dt">k.R2_0=</span><span class="dv">9</span>, <span class="dt">R2.resid=</span>.<span class="dv">8</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb49-2"><a href="#cb49-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">sig.level=</span>.<span class="dv">01</span>)</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:01:16
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 8
@@ -770,6 +775,7 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 <h3>Example 10.3</h3>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">p_anova.test</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">k=</span><span class="dv">10</span>, <span class="dt">f=</span>.<span class="dv">25</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st">  </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">95</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">20</span>, <span class="dv">300</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:21
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -778,11 +784,12 @@ the other hand, defaults to the Wald approach where the SE is at the MLE. To swi
 ## 1    NA    10  0.25      0.05  0.95
 ## 
 ## Estimate of n: 38.5
-## 95% Prediction Interval: [37.7, 39.5]</code></pre>
+## 95% Predicted Confidence Interval: [37.7, 39.5]</code></pre>
 <p>G*power gives the estimate <span class="math inline">\(n=39\)</span>.</p>
 <p>Fixing <span class="math inline">\(n=200\)</span> in total (hence, <span class="math inline">\(n=200/k=20\)</span>) and performing a compromise analysis assuming <span class="math inline">\(q=\frac{\beta}{\alpha}=1\)</span>,</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">p_anova.test</span>(<span class="dt">n=</span><span class="dv">20</span>, <span class="dt">k=</span><span class="dv">10</span>, <span class="dt">f=</span>.<span class="dv">25</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">beta_alpha=</span><span class="dv">1</span>, <span class="dt">replications=</span><span class="dv">30000</span>)</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:42
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 6
@@ -828,6 +835,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <span id="cb56-2"><a href="#cb56-2"></a>      <span class="dt">n=</span><span class="dv">28</span>, <span class="dt">n2_n1=</span><span class="dv">44</span><span class="op">/</span><span class="dv">28</span>, <span class="dt">sdx1=</span><span class="fl">9.02914</span>, <span class="dt">sdx2=</span><span class="fl">11.86779</span>, <span class="dt">dbeta=</span><span class="fl">0.01592</span>,</span>
 <span id="cb56-3"><a href="#cb56-3"></a>      <span class="dt">sigma=</span><span class="fl">0.5578413</span>, <span class="dt">gen_fun=</span>gen_twogroup) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:34
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 8
@@ -843,6 +851,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <span id="cb58-3"><a href="#cb58-3"></a>      <span class="dt">sigma=</span><span class="fl">0.5578413</span>, <span class="dt">gen_fun=</span>gen_twogroup) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb58-4"><a href="#cb58-4"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">8</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">100</span>, <span class="dv">1000</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:02:02
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 8
@@ -851,8 +860,8 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 ## 1 X:S = 0 0.55784    NA 9.0291 11.868 0.01592      0.05   0.8
 ## 
 ## Estimate of n: 165.2
-## 95% Prediction Interval: [163.0, 167.6]</code></pre>
-<p>G*Power gives the estimate for <span class="math inline">\(n\)</span> to be 163 (and therefore 256 in the second group given <span class="math inline">\(n2_n1\)</span>).</p>
+## 95% Predicted Confidence Interval: [163.0, 167.6]</code></pre>
+<p>G*Power gives the estimate for <span class="math inline">\(n\)</span> to be 163 (and therefore 256 in the second group given the <code>n2_n1</code>).</p>
 </div>
 </div>
 <div id="variance-tests" class="section level1">
@@ -863,6 +872,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <span id="cb60-2"><a href="#cb60-2"></a><span class="kw">p_var.test</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">vars=</span><span class="dv">1</span>, <span class="dt">sigma2=</span><span class="fl">1.5</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb60-3"><a href="#cb60-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">200</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:28
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 6
@@ -871,7 +881,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 ## 1    NA     1    1.5 FALSE           0.05   0.8
 ## 
 ## Estimate of n: 79.7
-## 95% Prediction Interval: [78.9, 80.6]</code></pre>
+## 95% Predicted Confidence Interval: [78.9, 80.6]</code></pre>
 <p>G*power gives sample size of 81.</p>
 </div>
 <div id="example-15.3-two-sample-variance-test" class="section level2">
@@ -881,6 +891,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <span id="cb62-2"><a href="#cb62-2"></a><span class="kw">p_var.test</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">vars=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">1.5</span>), <span class="dt">two.tailed=</span><span class="ot">TRUE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb62-3"><a href="#cb62-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">300</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:01:10
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -889,7 +900,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 ## 1    NA TRUE            0.05   0.8
 ## 
 ## Estimate of n: 194.1
-## 95% Prediction Interval: [191.5, 196.6]</code></pre>
+## 95% Predicted Confidence Interval: [191.5, 196.6]</code></pre>
 <p>G*Power gives estimate of 193 per group.</p>
 </div>
 </div>
@@ -899,6 +910,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1"></a>(out &lt;-<span class="st"> </span><span class="kw">p_t.test</span>(<span class="dt">n =</span> <span class="ot">NA</span>, <span class="dt">d =</span> <span class="fl">.5</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st">  </span></span>
 <span id="cb64-2"><a href="#cb64-2"></a><span class="st">               </span><span class="kw">Spower</span>(<span class="dt">power =</span> <span class="fl">.95</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">500</span>)))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:21
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -907,12 +919,13 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 ## 1    NA   0.5 FALSE           0.05  0.95
 ## 
 ## Estimate of n: 87.4
-## 95% Prediction Interval: [84.8, 89.3]</code></pre>
+## 95% Predicted Confidence Interval: [84.8, 89.3]</code></pre>
 <p>G*power estimate is 88 per group, <code>Spower</code> estimate is 87.4101 with the 95% CI [84.7763, 89.287].</p>
 <div id="example-19.3-paired-samples-t-test" class="section level3">
 <h3>Example 19.3; Paired samples t-test</h3>
 <div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1"></a><span class="kw">p_t.test</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">d=</span><span class="fl">0.421637</span>, <span class="dt">type =</span> <span class="st">&#39;paired&#39;</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">replications=</span><span class="dv">50000</span>)</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:40
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -925,6 +938,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <p>G*power gives power estimate of .832, though Cohen reported a value closer to .840. When <span class="math inline">\(d=0.2828427\)</span> this leads to</p>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a><span class="kw">p_t.test</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">d=</span>.<span class="dv">2828427</span>, <span class="dt">type =</span> <span class="st">&#39;paired&#39;</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">replications=</span><span class="dv">50000</span>)</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:40
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -938,6 +952,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a><span class="kw">p_t.test</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">d=</span><span class="fl">0.2828427</span>, <span class="dt">type =</span> <span class="st">&#39;paired&#39;</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb70-2"><a href="#cb70-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span><span class="fl">0.832114</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">300</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:47
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -946,7 +961,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 ## 1    NA 0.28284 paired      0.05 0.83211
 ## 
 ## Estimate of n: 107.2
-## 95% Prediction Interval: [106.5, 108.0]</code></pre>
+## 95% Predicted Confidence Interval: [106.5, 108.0]</code></pre>
 <p>G*power reports that around <span class="math inline">\(N=110\)</span> is required, though this is estimated visually using interpolation.</p>
 </div>
 <div id="example-20.3-one-sample-t-test" class="section level3">
@@ -954,6 +969,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a><span class="kw">p_t.test</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">d=</span>.<span class="dv">625</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st">  </span></span>
 <span id="cb72-2"><a href="#cb72-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">95</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">100</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:10
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 6
@@ -962,11 +978,12 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 ## 1    NA 0.625 one.sample FALSE           0.05  0.95
 ## 
 ## Estimate of n: 28.9
-## 95% Prediction Interval: [28.1, 29.7]</code></pre>
+## 95% Predicted Confidence Interval: [28.1, 29.7]</code></pre>
 <p>G*power gives sample size of <span class="math inline">\(n=30\)</span>.</p>
 <div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a><span class="kw">p_t.test</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">d=</span>.<span class="dv">1</span>, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st">  </span></span>
 <span id="cb74-2"><a href="#cb74-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">9</span>,<span class="dt">sig.level=</span>.<span class="dv">01</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">2000</span>))</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:18
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -975,7 +992,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 ## 1    NA   0.1 one.sample      0.01   0.9
 ## 
 ## Estimate of n: 1491.8
-## 95% Prediction Interval: [1473.0, 1508.2]</code></pre>
+## 95% Predicted Confidence Interval: [1473.0, 1508.2]</code></pre>
 <p>G*power gives sample size of <span class="math inline">\(n=1492\)</span>.</p>
 </div>
 <div id="wilcox-tests" class="section level2">
@@ -984,6 +1001,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <h3>Example 22.3; One-sample test with normal distribution</h3>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a><span class="kw">p_wilcox.test</span>(<span class="dt">n=</span><span class="dv">649</span>, <span class="dt">d=</span>.<span class="dv">1</span>, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:20
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 6
@@ -1006,6 +1024,7 @@ where <span class="math inline">\(Y=[Y_1, Y_2]\)</span>, <span class="math inlin
 <span id="cb78-7"><a href="#cb78-7"></a><span class="kw">p_wilcox.test</span>(<span class="dt">n=</span><span class="dv">67</span>, <span class="dt">n2_n1=</span>nr, <span class="dt">d=</span><span class="fl">0.375</span>, <span class="dt">parent1=</span>parent1, <span class="dt">parent2=</span>parent2) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb78-8"><a href="#cb78-8"></a><span class="st">    </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
+## Execution time (H:M:S): 00:00:11
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4

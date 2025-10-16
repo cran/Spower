@@ -6,7 +6,7 @@
 #' \code{SimDesign} package's \code{\link[SimDesign]{runSimulation}} and
 #' \code{\link[SimDesign]{SimSolve}} functions. As such, parallel processing is
 #' automatically supported, along with progress bars,
-#' confidence/prediction intervals for the results estimates, safety checks,
+#' confidence/predicted confidence intervals for the results estimates, safety checks,
 #' and more.
 #'
 #' Five types of power analysis flavors can be performed with \code{Spower},
@@ -58,9 +58,17 @@
 #'   in Bayesian posterior probability contexts that focus on the alternative
 #'   hypothesis, \eqn{P(H_1|D)}.
 #'
-#'   Alternatively, a \code{logical} vector can be returned (e.g., when using confidence intervals (CIs) or
+#'   Alternatively, a \code{logical} vector can be returned (e.g., when using
+#'   confidence intervals (CIs) or
 #'   evaluating regions of practical equivalence (ROPEs)), where the average of these
 #'   TRUE/FALSE vector corresponds to the empirical power.
+#'
+#'   Finally, a named \code{list} or \code{data.frame} can be returned instead
+#'   if there is need for more general, heterogeneous objects, however a specific
+#'   element to extract must be specified
+#'   using the \code{select} argument to indicate which of the list elements
+#'   are to be used in the power computations. All other elements from the simulation can, however, be
+#'   extracted from the \code{\link[SimDesign]{SimResults}} function.
 #'
 #' For \code{\link{SpowerCurve}} and \code{\link{SpowerBatch}},
 #' first expression input must be identical to \code{...} in
@@ -176,6 +184,8 @@
 #'   (see \code{\link[SimDesign]{SimSolve}}). Disabled by default
 #'
 #' @param verbose logical; should information be printed to the console?
+#'   By default this is determined based on whether the session is interactive
+#'   or not
 #'
 #' @import SimDesign stats
 #' @return an invisible \code{tibble}/\code{data.frame}-type object of
@@ -433,9 +443,10 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 				   replications=10000, integer,
 				   parallel = FALSE, cl = NULL, packages = NULL,
 				   ncores = parallelly::availableCores(omit = 1L),
-				   predCI = 0.95, predCI.tol = .01, verbose = TRUE,
+				   predCI = 0.95, predCI.tol = .01, verbose = interactive(),
 				   check.interval = FALSE, maxiter=150, wait.time = NULL,
 				   lastSpower = NULL, select = NULL, control = list()){
+	start_time <- proc.time()[3L]
 	stopifnot(sig.direction %in% c('below', 'above'))
 	if(missing(beta_alpha)) beta_alpha <- NULL
 	if(!is.null(cl)) parallel <- TRUE
@@ -567,14 +578,17 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 		conditions$sig.level <- as.numeric(NA)
 		conditions$beta_alpha <- beta_alpha
 	}
+	elapsed_time <- proc.time()[3L] - start_time
 	attr(ret, 'Spower_extra') <- list(predCI=predCI, conditions=conditions,
-							   beta_alpha=beta_alpha, expected=FALSE)
+							   beta_alpha=beta_alpha, expected=FALSE,
+							   elapsed_time=elapsed_time)
 	class(ret) <- c('Spower', class(ret))
 	.SpowerEnv$lastSim <- ret
 	if(verbose){
 		print(ret)
 		return(invisible(ret))
 	}
+
 	ret
 }
 
@@ -583,8 +597,6 @@ sim_function_aug <- function(condition, dat, fixed_objects){
 	if(length(pick))
 		fixed_objects$expr[pick] <- condition[pick]
 	ret <- eval(fixed_objects$expr, envir = fixed_objects$parent_frame)
-	if(any(is.logical(ret)))
-		ret[is.logical(ret)] <- as.integer(!ret[is.logical(ret)])
 	ret
 }
 
@@ -594,6 +606,8 @@ sim_function_aug <- function(condition, dat, fixed_objects){
 #' @export
 print.Spower <- function(x, ...){
 	lste <- attr(x, 'Spower_extra')
+	time <- format(as.POSIXct(lste$elapsed_time, tz = "UTC"), "%H:%M:%S")
+	cat(sprintf("\nExecution time (H:M:S): %s", time))
 	cat("\nDesign conditions: \n\n")
 	print(lste$conditions)
 	if(inherits(x, 'SimSolve')){
@@ -602,7 +616,7 @@ print.Spower <- function(x, ...){
 		cat(sprintf(paste0("\nEstimate of %s: ", if(lst$integer) "%.1f" else "%.3f"),
 					names(lste$conditions)[pick],
 					x[[pick]]))
-		cat(sprintf(paste0("\n%s%% Prediction Interval: ",
+		cat(sprintf(paste0("\n%s%% Predicted Confidence Interval: ",
 						   if(lst$integer) "[%.1f, %.1f]" else "[%.3f, %.3f]", '\n'),
 					lste$predCI*100, lst$predCIs_root[1], lst$predCIs_root[2]))
 	} else {
