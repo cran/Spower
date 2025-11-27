@@ -12,7 +12,7 @@
 
 <meta name="author" content="Phil Chalmers" />
 
-<meta name="date" content="2025-10-16" />
+<meta name="date" content="2025-11-27" />
 
 <title>Type M and Type S errors</title>
 
@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Type M and Type S errors</h1>
 <h4 class="author">Phil Chalmers</h4>
-<h4 class="date">October 16, 2025</h4>
+<h4 class="date">November 27, 2025</h4>
 
 
 <div id="TOC">
@@ -423,7 +423,7 @@ are relevant to the power analysis under investigation.</p>
 <span id="cb1-10"><a href="#cb1-10"></a>}</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dt">n=</span><span class="dv">15</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:06
+## Execution time (H:M:S): 00:00:21
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -450,7 +450,7 @@ is observed. The following code evaluates how to obtain such an <span class="mat
 <span id="cb4-2"><a href="#cb4-2"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span><span class="dv">1</span><span class="op">-</span>typeS, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">200</span>))</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:07
+## Execution time (H:M:S): 00:00:17
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -496,7 +496,7 @@ user does not have to.</p>
 <p>Setting the sample size to <span class="math inline">\(N=30\)</span> (hence, <code>n=15</code>) leads to the following power estimates.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dt">n=</span><span class="dv">15</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:19
+## Execution time (H:M:S): 00:00:27
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -548,7 +548,7 @@ the following.</p>
 <span id="cb12-2"><a href="#cb12-2"></a><span class="kw">l_two.t_typeM</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">select=</span><span class="st">&#39;retain&#39;</span>) -&gt;<span class="st"> </span>typeM</span>
 <span id="cb12-3"><a href="#cb12-3"></a>typeM</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:13
+## Execution time (H:M:S): 00:00:19
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -596,7 +596,7 @@ issues, as seen below by doubling the sample size below.</p>
 <span id="cb19-2"><a href="#cb19-2"></a><span class="kw">l_two.t_typeM</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">select=</span><span class="st">&#39;retain&#39;</span>) -&gt;<span class="st"> </span>typeM2</span>
 <span id="cb19-3"><a href="#cb19-3"></a>typeM2</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:09
+## Execution time (H:M:S): 00:00:13
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4

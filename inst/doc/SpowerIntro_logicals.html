@@ -12,7 +12,7 @@
 
 <meta name="author" content="Phil Chalmers" />
 
-<meta name="date" content="2025-10-16" />
+<meta name="date" content="2025-11-27" />
 
 <title>Logical Vectors, Bayesian power analyses, and ROPEs</title>
 
@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Logical Vectors, Bayesian power analyses, and ROPEs</h1>
 <h4 class="author">Phil Chalmers</h4>
-<h4 class="date">October 16, 2025</h4>
+<h4 class="date">November 27, 2025</h4>
 
 
 <div id="TOC">
@@ -372,9 +372,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <code>logical</code> values in the simulation experiment rather than
 letting <code>Spower()</code> perform these threshold transformations internally
 (e.g., using <code>sig.level</code>) as these can
-include more intricate experimental result requirements. The following
+include more intricate experimental requirements. The following
 showcases various ways that returning <code>logical</code> values works in the
-<code>Spower</code> package, where the average across the <code>TRUE</code>/<code>FALSE</code> values
+<code>Spower</code> package, where the average across the collected <code>TRUE</code>/<code>FALSE</code> values
 reflects the target power estimate.</p>
 <p>Note that returning a <code>logical</code> in the simulation
 experiment necessarily implies that the <code>sig.level</code> argument in <code>Spower()</code>
@@ -383,9 +383,9 @@ be defined within the context of the simulation experiment code
 (e.g., including <code>conf.level</code> or <code>sig.level</code> in the simulation experiment function directly).</p>
 <div id="confidence-and-credible-intervals" class="section level2">
 <h2>Confidence (and credible) intervals</h2>
-<p>Keeping with the basic t-test experiment in the introduction vignette,
+<p>Keeping with the basic <span class="math inline">\(t\)</span>-test experiment in the introduction vignette,
 suppose we’re interested in the power to reject the null hypothesis
-<span class="math inline">\(H_0:\, \mu = \mu_0\)</span> in a one-sample <span class="math inline">\(t\)</span>-test, where <span class="math inline">\(P(D|H_0\)</span>)
+<span class="math inline">\(H_0:\, \mu = \mu_0\)</span> in a one-sample <span class="math inline">\(t\)</span>-test, where <span class="math inline">\(P(D|H_0)\)</span>
 is the probability of the observing the data given the null hypothesis. Normally, one
 could simply write an experiment that returns a <span class="math inline">\(p\)</span>-value in this
 context, such as the following,</p>
@@ -400,7 +400,8 @@ specific <span class="math inline">\(\alpha\)</span> level to define their range
 <p>If one were to take this approach, the defined simulation function should return a
 <code>logical</code> value based on the relation of the parameter estimate to the CI,
 where the CI is used to evaluate the
-plausibility of <span class="math inline">\(\mu = \mu_0\)</span>. Specifically, the CI is used to evaluate whether <span class="math inline">\(\mu_0\)</span> falls <em>outside</em>
+plausibility of <span class="math inline">\(\mu = \mu_0\)</span>. Specifically, in the context of using CI’s to reflect <span class="math inline">\(p\)</span>-value logic,
+the CI is used to evaluate whether <span class="math inline">\(\mu_0\)</span> falls <em>outside</em>
 the advertised interval, returning <code>TRUE</code> if outside the CI and <code>FALSE</code> if within the interval.
 Alternatively, if one were in a Bayesian analysis
 context, a <em>credible interval</em> could be used instead of the confidence
@@ -447,7 +448,7 @@ relevant when <code>logical</code> information is returned. The following compar
 ## 95% Confidence Interval: [0.834, 0.849]</code></pre>
 <div id="using-previouls-defined-simulation-code" class="section level3">
 <h3>Using previouls defined simulation code</h3>
-<p>Note that even in the CI context presented above writing user-defined functions may not be entirely necessary. This is because the related, internally defined function <code>p_t.test()</code> can be used to obtain the same CI information by returning the model itself and subsequently extracting the <code>$conf.int</code> element. The benefit of this, as shown below, is that users do not need to reinvent the data generation and analysis portions of the experiment if this is already available (and well tested) in the package.</p>
+<p>Note that even in the CI context presented above, writing user-defined functions may not be entirely necessary. This is because the related, internally defined function <code>p_t.test()</code> can be used to obtain the same CI information by returning the model itself, and subsequently extracting the <code>$conf.int</code> element. The benefit of this, as shown below, is that users do not need to reinvent the data generation and analysis portions of the experiment if this is already available in the package.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>l_single.t &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu=</span><span class="dv">0</span>, <span class="dt">conf.level=</span>.<span class="dv">95</span>){</span>
 <span id="cb8-2"><a href="#cb8-2"></a>    <span class="co"># return analysis output from t.test() for further extraction</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a>    out &lt;-<span class="st"> </span><span class="kw">p_t.test</span>(<span class="dt">n=</span>n, <span class="dt">d=</span>mean, <span class="dt">mu=</span>mu, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>, </span>
@@ -466,17 +467,18 @@ relevant when <code>logical</code> information is returned. The following compar
 specific <em>precision</em> criteria are important to satisfy.
 Suppose that, in addition to detecting a particular effect of interest
 in a given sample, the results are only deemed “practically useful” if
-the resulting effect size inference are sufficiently precise, where
+the resulting effect size inferences are sufficiently precise, where
 precision could be based on the <em>magnitude of the SE</em>, the <em>width of the uncertainty interval</em>,
 or other relevant precision-based criterion. In this case, one may join the logic of the <span class="math inline">\(p\)</span>-value/CI approaches
-presented thus far to create a joint evaluation for power, where a
-result is deemed “significant and useful” if the tests are null hypothesis test is
-rejected (in the <span class="math inline">\(p\)</span>-value context) <em>and</em> the CI is sufficiently narrow.</p>
+to create a joint evaluation for power, where a
+result is deemed both “significant and useful” if the null hypothesis is significantly
+rejected <em>and</em> the CI is sufficiently narrow.</p>
 <p>As a working example, suppose that the above one-sample <span class="math inline">\(t\)</span>-test experiment was generalized
 such that a meaningfully significant result would require a) the rejection
 of the null, <span class="math inline">\(\mu_0=0\)</span>, and b) a CI width less than
 1/4 standardized mean units. What value of <span class="math inline">\(N\)</span> would be required to obtain such a
-significant and sufficiently accurate inference to obtain a power of 80% given the small effect size of <span class="math inline">\(0.2\)</span>?</p>
+significant and sufficiently accurate inference to obtain a power of 80% given, say,
+the “small” effect size of <span class="math inline">\(d=0.2\)</span>?</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>l_precision &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, CI.width, <span class="dt">mu=</span><span class="dv">0</span>, <span class="dt">alpha=</span>.<span class="dv">05</span>){</span>
 <span id="cb10-2"><a href="#cb10-2"></a>    g &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dt">mean=</span>mean)</span>
 <span id="cb10-3"><a href="#cb10-3"></a>    out &lt;-<span class="st"> </span><span class="kw">t.test</span>(g, <span class="dt">mu=</span>mu)</span>
@@ -498,8 +500,8 @@ significant and sufficiently accurate inference to obtain a power of 80% given t
 ## 
 ## Estimate of n: 272.6
 ## 95% Predicted Confidence Interval: [272.0, 273.2]</code></pre>
-<p>Compared the required <span class="math inline">\(N\)</span> to an power analysis that just contains a
-significant result this joint practical significance criteria requires a notably higher sample size. Note that in the special case where <code>CI.width=Inf</code> then all CI widths will be accepted, which will result in the same power output that would have been obtained using <code>p_single.t()</code>.</p>
+<p>Compared to the required <span class="math inline">\(N\)</span> from a power analysis that just contains a
+significant result, this joint practical significance criteria requires a meaningfully higher sample size. Note that in the special case where <code>CI.width=Inf</code> then all CI widths will be accepted, which will result in the same power output that would have been obtained using <code>p_single.t()</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">l_precision</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">2</span>, <span class="dt">CI.width=</span><span class="ot">Inf</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">500</span>))</span></code></pre></div>
 <pre><code>## 
@@ -531,9 +533,9 @@ Though not a strict limitation per se, it is often more natural to focus
 directly on the sample from posterior distribution for power analysis
 applications rather than on the marginal Bayes factors; this is
 demonstrated in the next section. Nevertheless, such applications are
-possible with <code>Spower</code> if there is interest in doing so.</p>
-<p>As a simple example, the following one-sample <span class="math inline">\(t\)</span>-test initially defined
-above could be redefined to focus on output from the <code>BayesFactor</code>
+possible with <code>Spower</code> if there is sufficient interest in doing so.</p>
+<p>As a simple example, the following one-sample <span class="math inline">\(t\)</span>-test, initially defined
+above, could be redefined to focus on output from the <code>BayesFactor</code>
 package, which returns the <span class="math inline">\(BF\)</span> criteria in log units (hence, <code>exp()</code> is
 used to return the ratio to its original metric) assuming a non-informative Jeffreys prior for <span class="math inline">\(\mu\)</span>.
 In this case a <code>TRUE</code> is returned if the Bayes factor is greater than 3
@@ -552,7 +554,7 @@ while <code>Spower()</code> is informed to only focus on the <code>logical</code
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">l_single.Bayes.t_BF</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">mu=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">select=</span><span class="st">&#39;largeBF&#39;</span>) -&gt;<span class="st"> </span>BFsim</span>
 <span id="cb16-2"><a href="#cb16-2"></a>BFsim</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:01:27
+## Execution time (H:M:S): 00:01:25
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -632,7 +634,7 @@ notably lower power.</p>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="kw">pp_single.Bayes.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">mu=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb22-3"><a href="#cb22-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">sig.level =</span> <span class="fl">.90</span>, <span class="dt">sig.direction =</span> <span class="st">&#39;above&#39;</span>)</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:01:23
+## Execution time (H:M:S): 00:01:19
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -784,7 +786,7 @@ to utilize all available cores.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="kw">rope.lm</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">beta0=</span><span class="dv">2</span>, <span class="dt">beta1=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">range=</span><span class="kw">c</span>(.<span class="dv">8</span>, <span class="fl">1.2</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb33-2"><a href="#cb33-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">sig.level=</span>.<span class="dv">95</span>, <span class="dt">sig.direction=</span><span class="st">&#39;above&#39;</span>, <span class="dt">parallel=</span><span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:06:21
+## Execution time (H:M:S): 00:08:55
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -801,7 +803,7 @@ HDI-ROPE criteria.</p>
 <span id="cb35-2"><a href="#cb35-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">sig.level=</span>.<span class="dv">95</span>, <span class="dt">sig.direction=</span><span class="st">&#39;above&#39;</span>,</span>
 <span id="cb35-3"><a href="#cb35-3"></a>           <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">200</span>), <span class="dt">parallel=</span><span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:16:51
+## Execution time (H:M:S): 00:18:52
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
