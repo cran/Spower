@@ -92,8 +92,8 @@ print(typeM)
 ## -----------------------------------------------------------------------------
 results <- SimResults(typeM)
 results
-with(results, c(mean=mean(M), SD=sd(M), min=min(M), max=max(M)))
-hist(results$M, 30)
+subset(results, select=M) |> descript()
+with(results, hist(M, 30))
 
 ## ----eval=eval----------------------------------------------------------------
 # # double the total sample size
@@ -115,8 +115,8 @@ print(typeM2)
 ## -----------------------------------------------------------------------------
 results <- SimResults(typeM2)
 results
-with(results, c(mean=mean(M), SD=sd(M), min=min(M), max=max(M)))
-hist(results$M, 30)
+subset(results, select=M) |> descript()
+with(results, hist(M, 30))
 
 ## ----include=FALSE, eval=eval-------------------------------------------------
 # saveRDS(store, '../inst/intro3.rds') # rebuild package when done

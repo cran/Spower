@@ -12,7 +12,7 @@
 
 <meta name="author" content="Phil Chalmers" />
 
-<meta name="date" content="2025-11-27" />
+<meta name="date" content="2026-02-13" />
 
 <title>Logical Vectors, Bayesian power analyses, and ROPEs</title>
 
@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Logical Vectors, Bayesian power analyses, and ROPEs</h1>
 <h4 class="author">Phil Chalmers</h4>
-<h4 class="date">November 27, 2025</h4>
+<h4 class="date">February 13, 2026</h4>
 
 
 <div id="TOC">
@@ -436,7 +436,7 @@ relevant when <code>logical</code> information is returned. The following compar
 ## 95% Confidence Interval: [0.839, 0.853]</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">l_single.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:03
+## Execution time (H:M:S): 00:00:04
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -487,10 +487,14 @@ the “small” effect size of <span class="math inline">\(d=0.2\)</span>?</p>
 <span id="cb10-6"><a href="#cb10-6"></a>    <span class="co"># return TRUE if significant and CI is sufficiently narrow</span></span>
 <span id="cb10-7"><a href="#cb10-7"></a>    out<span class="op">$</span>p.value <span class="op">&lt;</span><span class="st"> </span>alpha <span class="op">&amp;&amp;</span><span class="st"> </span>width <span class="op">&lt;</span><span class="st"> </span>CI.width   </span>
 <span id="cb10-8"><a href="#cb10-8"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">l_precision</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">2</span>, <span class="dt">CI.width=</span><span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">500</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">l_precision</span>(<span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">10</span>, <span class="dv">500</span>), <span class="dt">mean=</span>.<span class="dv">2</span>, <span class="dt">CI.width=</span><span class="dv">1</span><span class="op">/</span><span class="dv">4</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co"># equivalently: </span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co"># l_precision(n=NA, mean=.2, CI.width=1/4) |&gt; </span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co">#    Spower(power=.80, interval=c(10, 500))</span></span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:20
+## Execution time (H:M:S): 00:00:22
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -502,10 +506,10 @@ the “small” effect size of <span class="math inline">\(d=0.2\)</span>?</p>
 ## 95% Predicted Confidence Interval: [272.0, 273.2]</code></pre>
 <p>Compared to the required <span class="math inline">\(N\)</span> from a power analysis that just contains a
 significant result, this joint practical significance criteria requires a meaningfully higher sample size. Note that in the special case where <code>CI.width=Inf</code> then all CI widths will be accepted, which will result in the same power output that would have been obtained using <code>p_single.t()</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">l_precision</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">2</span>, <span class="dt">CI.width=</span><span class="ot">Inf</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">500</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">l_precision</span>(<span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">10</span>, <span class="dv">500</span>), <span class="dt">mean=</span>.<span class="dv">2</span>, <span class="dt">CI.width=</span><span class="ot">Inf</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>)</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:18
+## Execution time (H:M:S): 00:00:20
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -554,7 +558,7 @@ while <code>Spower()</code> is informed to only focus on the <code>logical</code
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">l_single.Bayes.t_BF</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">mu=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">select=</span><span class="st">&#39;largeBF&#39;</span>) -&gt;<span class="st"> </span>BFsim</span>
 <span id="cb16-2"><a href="#cb16-2"></a>BFsim</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:01:25
+## Execution time (H:M:S): 00:01:24
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -634,7 +638,7 @@ notably lower power.</p>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="kw">pp_single.Bayes.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">5</span>, <span class="dt">mu=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb22-3"><a href="#cb22-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">sig.level =</span> <span class="fl">.90</span>, <span class="dt">sig.direction =</span> <span class="st">&#39;above&#39;</span>)</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:01:19
+## Execution time (H:M:S): 00:01:23
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -691,7 +695,7 @@ would be deemed practically equivalent a priori. The power to jointly reject the
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">l_equiv.t</span>(<span class="dv">50</span>, <span class="dt">delta=</span><span class="dv">1</span>, <span class="dt">equiv=</span><span class="kw">c</span>(<span class="op">-</span><span class="fl">2.5</span>, <span class="fl">2.5</span>), </span>
 <span id="cb25-2"><a href="#cb25-2"></a>          <span class="dt">sds=</span><span class="kw">c</span>(<span class="fl">2.5</span>, <span class="fl">2.5</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:00:05
+## Execution time (H:M:S): 00:00:06
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 4
@@ -786,7 +790,7 @@ to utilize all available cores.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="kw">rope.lm</span>(<span class="dt">n=</span><span class="dv">50</span>, <span class="dt">beta0=</span><span class="dv">2</span>, <span class="dt">beta1=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">range=</span><span class="kw">c</span>(.<span class="dv">8</span>, <span class="fl">1.2</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb33-2"><a href="#cb33-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">sig.level=</span>.<span class="dv">95</span>, <span class="dt">sig.direction=</span><span class="st">&#39;above&#39;</span>, <span class="dt">parallel=</span><span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:08:55
+## Execution time (H:M:S): 00:04:03
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5
@@ -799,11 +803,10 @@ to utilize all available cores.</p>
 <p>Finally, to demonstrate why this might be useful, the following
 estimates the required sample size to achieve 80% power when using a 95%
 HDI-ROPE criteria.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">rope.lm</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">beta0=</span><span class="dv">2</span>, <span class="dt">beta1=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">range=</span><span class="kw">c</span>(.<span class="dv">8</span>, <span class="fl">1.2</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
-<span id="cb35-2"><a href="#cb35-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">sig.level=</span>.<span class="dv">95</span>, <span class="dt">sig.direction=</span><span class="st">&#39;above&#39;</span>,</span>
-<span id="cb35-3"><a href="#cb35-3"></a>           <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">50</span>, <span class="dv">200</span>), <span class="dt">parallel=</span><span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">rope.lm</span>(<span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">50</span>, <span class="dv">200</span>), <span class="dt">beta0=</span><span class="dv">2</span>, <span class="dt">beta1=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">range=</span><span class="kw">c</span>(.<span class="dv">8</span>, <span class="fl">1.2</span>)) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span>.<span class="dv">80</span>, <span class="dt">sig.level=</span>.<span class="dv">95</span>, <span class="dt">sig.direction=</span><span class="st">&#39;above&#39;</span>, <span class="dt">parallel=</span><span class="ot">TRUE</span>)</span></code></pre></div>
 <pre><code>## 
-## Execution time (H:M:S): 00:18:52
+## Execution time (H:M:S): 00:14:53
 ## Design conditions: 
 ## 
 ## # A tibble: 1 × 5

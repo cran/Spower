@@ -69,6 +69,12 @@ update(prospective, beta_alpha=4)
 if(eval) store$apriori <- getLastSpower()
 print(store$apriori)
 
+## ----eval=FALSE---------------------------------------------------------------
+# p_single.t(n=interval(20, 200), mean=.5) |> Spower(power=.8)
+
+## ----echo=FALSE---------------------------------------------------------------
+print(store$apriori)
+
 ## ----eval=eval----------------------------------------------------------------
 # p_single.t(n=100, mean=NA) |>
 # 	Spower(power=.8, interval=c(.1, 3))
@@ -76,6 +82,9 @@ print(store$apriori)
 ## ----echo=FALSE---------------------------------------------------------------
 if(eval) store$sensitive <- getLastSpower()
 print(store$sensitive)
+
+## ----eval=eval----------------------------------------------------------------
+# # p_single.t(n=100, mean=interval(.1, 3)) |> Spower(power=.8)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_single.t(n=50, mean=.5) |>

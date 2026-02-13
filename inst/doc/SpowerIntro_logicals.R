@@ -68,8 +68,12 @@ l_precision <- function(n, mean, CI.width, mu=0, alpha=.05){
 }
 
 ## ----eval=eval----------------------------------------------------------------
-# l_precision(n=NA, mean=.2, CI.width=1/4) |>
-# 	Spower(power=.80, interval=c(10, 500))
+# l_precision(n=interval(10, 500), mean=.2, CI.width=1/4) |>
+# 	Spower(power=.80)
+# 
+# # equivalently:
+# # l_precision(n=NA, mean=.2, CI.width=1/4) |>
+# #  	 Spower(power=.80, interval=c(10, 500))
 
 ## ----echo=FALSE---------------------------------------------------------------
 if(eval) store$lprecision <- getLastSpower()
@@ -77,8 +81,8 @@ lprecision <- store$lprecision
 print(lprecision)
 
 ## ----eval=eval----------------------------------------------------------------
-# l_precision(n=NA, mean=.2, CI.width=Inf) |>
-# 	Spower(power=.80, interval=c(10, 500))
+# l_precision(n=interval(10, 500), mean=.2, CI.width=Inf) |>
+# 	Spower(power=.80)
 
 ## ----echo=FALSE---------------------------------------------------------------
 if(eval) store$lprecision2 <- getLastSpower()
@@ -208,9 +212,8 @@ ROPE.lm <- store$ROPE.lm
 print(ROPE.lm)
 
 ## ----eval=eval----------------------------------------------------------------
-# rope.lm(n=NA, beta0=2, beta1=1, sigma=1/2, range=c(.8, 1.2)) |>
-# 	Spower(power=.80, sig.level=.95, sig.direction='above',
-# 		   interval=c(50, 200), parallel=TRUE)
+# rope.lm(n=interval(50, 200), beta0=2, beta1=1, sigma=1/2, range=c(.8, 1.2)) |>
+# 	Spower(power=.80, sig.level=.95, sig.direction='above', parallel=TRUE)
 
 ## ----echo=FALSE---------------------------------------------------------------
 if(eval) store$ROPE.lm_n <- getLastSpower()
