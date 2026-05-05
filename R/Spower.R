@@ -6,7 +6,7 @@
 #' \code{SimDesign} package's \code{\link[SimDesign]{runSimulation}} and
 #' \code{\link[SimDesign]{SimSolve}} functions. As such, parallel processing is
 #' automatically supported, along with progress bars,
-#' confidence/predicted confidence intervals for the results estimates,
+#' (predicted) confidence intervals for the results estimates,
 #' safety checks, and more.
 #'
 #' Five types of power analysis flavors can be performed with \code{Spower},
@@ -179,7 +179,8 @@
 #'   less than one the opposite. A ratio equal to 1 gives an equal trade-off
 #'   between Type I and Type II errors
 #'
-#' @param parallel for parallel computing for slower simulation experiments
+#' @param parallel for parallel computing for slower simulation experiments,
+#'   defined using the \code{mirai} package by default
 #'   (see \code{\link[SimDesign]{runSimulation}} for details).
 #'
 #   Note that
@@ -212,7 +213,8 @@
 #'   By default this is determined based on whether the session is interactive
 #'   or not
 #'
-#' @import SimDesign stats
+#' @import SimDesign stats cli
+#' @importFrom mirai make_cluster stop_cluster
 #' @return an invisible \code{tibble}/\code{data.frame}-type object of
 #' class \code{'Spower'} containing the power results from the
 #' simulation experiment
@@ -483,16 +485,14 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 	pf <- parent.frame(nparent)
 	export_funs <- ls(envir = pf)
 	if(parallel){
-		type <- if(is.null(control$type))
-			ifelse(.Platform$OS.type == 'windows', 'PSOCK', 'FORK')
-		else control$type
+		print_cores <- verbose
 		if(is.null(cl)){
-			cl <- parallel::makeCluster(ncores, type=type)
-			on.exit(parallel::stopCluster(cl), add = TRUE)
-		}
+			cl <- mirai::make_cluster(ncores)
+			on.exit(mirai::stop_cluster(cl), add = TRUE)
+		} else print_cores <- FALSE
 		parallel::clusterExport(cl=cl, export_funs, envir = pf)
-		if(verbose)
-			message(sprintf("\nNumber of parallel clusters in use: %i", length(cl)))
+		if(print_cores)
+			message(sprintf("\nNumber of cores used in cluster: %i", length(cl)))
 	}
 	packages <- c(packages, 'Spower')
 	if(is.na(sig.level)){
@@ -641,49 +641,57 @@ sim_function_aug <- function(condition, dat, fixed_objects){
 #'   the this will be a \code{list}
 #' @export
 print.Spower <- function(x, ...){
+	cli::cli_h1("Spower Results")
+	cli::cli_text("")
 	lste <- attr(x, 'Spower_extra')
-	time <- format(as.POSIXct(lste$elapsed_time, tz = "UTC"), "%H:%M:%S")
-	cat(sprintf("\nExecution time (H:M:S): %s", time))
-	cat("\nDesign conditions: \n\n")
+	cat("Design conditions:\n\n")
 	print(lste$conditions)
+	cli::cli_text("")
 	if(inherits(x, 'SimSolve')){
 		lst <- attr(x, 'roots')[[1]]
 		pick <- which(is.na(lste$conditions[1,]))
-		cat(sprintf(paste0("\nEstimate of %s: ", if(lst$integer) "%.1f" else "%.3f"),
-					names(lste$conditions)[pick],
-					x[[pick]]))
-		cat(sprintf(paste0("\n%s%% Predicted Confidence Interval: ",
-						   if(lst$integer) "[%.1f, %.1f]" else "[%.3f, %.3f]", '\n'),
-					lste$predCI*100, lst$predCIs_root[1], lst$predCIs_root[2]))
+		digits <- ifelse(lst$integer, '%.1f', '%.3f')
+		cli::cli_text("Estimate of {names(lste$conditions)[pick]}:
+					  {.val {noquote(sprintf(digits, x[[pick]]))}}")
+		cli::cli_text("{lste$predCI*100}% Confidence Interval:
+					  [{.val {noquote(sprintf(digits, lst$predCIs_root[1]))}},
+					  {.val {noquote(sprintf(digits, lst$predCIs_root[2]))}}]")
 	} else {
 		if(!is.null(lste$beta_alpha)){
-			cat(sprintf("\nEstimate of Type I error rate (alpha/sig.level): %.3f", x$sig.level))
+			cli::cli_text("Estimate of Type I error rate (alpha/sig.level): {.val {round(x$sig.level, 3)}}")
 			alpha <- 1 - lste$predCI
 			CI <- x$sig.level + c(qnorm(c(alpha/2, lste$predCI+alpha/2))) *
 				sqrt((x$sig.level * (1-x$sig.level))/x$REPLICATIONS)
-			CI <- clip_CI(CI)
-			cat(sprintf("\n%s%% Confidence Interval: [%.3f, %.3f]\n",
-						lste$predCI*100, CI[1], CI[2]))
+			CI <- round(clip_CI(CI), 3)
+			cli::cli_text("{lste$predCI*100}% Confidence Interval:
+						  [{.val {noquote(sprintf('%.3f', CI[1]))}},
+						  {.val {noquote(sprintf('%.3f', CI[2]))}}]")
 			power <- x$power
-			cat(sprintf("\nEstimate of %spower (1-beta): %.3f",
-						if(lste$expected) 'expected ' else "", power))
+			cli::cli_text("")
+			cli::cli_text("Estimate of power (1-beta): {.val {noquote(sprintf('%.3f', power))}}")
 			CI <- power + c(qnorm(c(alpha/2, lste$predCI + alpha/2))) *
 				sqrt((power * (1-power))/x$REPLICATIONS)
-			CI <- clip_CI(CI)
-			cat(sprintf("\n%s%% Confidence Interval: [%.3f, %.3f]\n",
-						lste$predCI*100, CI[1], CI[2]))
+			CI <- round(clip_CI(CI), 3)
+			cli::cli_text("{lste$predCI*100}% Confidence Interval:
+						  [{.val {noquote(sprintf('%.3f', CI[1]))}},
+						  {.val {noquote(sprintf('%.3f', CI[2]))}}]")
 		} else {
 			CI <- attr(x, 'extra_info')$power.CI
 			nms <- if(is.matrix(CI)){
 				rownames(CI)
 			} else 'power'
 			for(nm in nms){
-				cat(sprintf("\nEstimate of %s: %.3f", nm, x[[nm]]))
-				cat(sprintf("\n%s%% Confidence Interval: [%.3f, %.3f]\n",
-							lste$predCI*100, CI[nm,1], CI[nm,2]))
+				value <- round(x[[nm]], 3)
+				ci <- round(CI[nm,], 3)
+				cli::cli_text("Estimate of {nm}: {.val {noquote(sprintf('%.3f', value))}}")
+				cli::cli_text("{lste$predCI*100}% Confidence Interval:
+							  [{.val {noquote(sprintf('%.3f', ci[1]))}},
+							  {.val {noquote(sprintf('%.3f', ci[2]))}}]")
 			}
 		}
 	}
+	time <- format(as.POSIXct(lste$elapsed_time, tz = "UTC"), "%H:%M:%S")
+	cli::cli_text("Execution time (H:M:S): {time}")
 	invisible(NULL)
 }
 

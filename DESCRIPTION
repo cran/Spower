@@ -1,6 +1,6 @@
 Package: Spower
 Title: Power Analyses using Monte Carlo Simulations
-Version: 0.6
+Version: 0.6.2
 Authors@R: 
    person("Phil", family="Chalmers", email =
                      "rphilip.chalmers@gmail.com", role = c("aut", "cre"), 
@@ -23,8 +23,8 @@ Description: Provides a general purpose simulation-based power analysis
    further details see the associated publication in
    Chalmers (2025) <doi:10.3758/s13428-025-02787-z>.
 Depends: SimDesign (>= 2.22.3), R (>= 4.1.0), stats
-Imports: cocor, car, polycor, parallelly, methods, ggplot2, plotly,
-        lavaan, EnvStats
+Imports: cocor, car, polycor, parallelly, mirai, methods, cli, ggplot2,
+        plotly, lavaan, EnvStats
 Suggests: knitr, rmarkdown, bookdown, extraDistr, copula, effectsize,
         pwr
 VignetteBuilder: knitr
@@ -38,7 +38,7 @@ URL: https://philchalmers.github.io/Spower/,
 BugReports: https://github.com/philchalmers/Spower/issues?state=open
 RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2026-02-13 17:03:22 UTC; phil
+Packaged: 2026-05-05 18:21:07 UTC; phil
 Author: Phil Chalmers [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-5332-2810>)
-Date/Publication: 2026-02-13 17:40:10 UTC
+Date/Publication: 2026-05-05 20:00:02 UTC
