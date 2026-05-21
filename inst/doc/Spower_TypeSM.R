@@ -28,7 +28,7 @@ getwd()
 ## ----eval=eval----------------------------------------------------------------
 # l_two.t_correct.sign(n=15, mean=.2) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$typeS <- getLastSpower()
 typeS <- store$typeS
 print(typeS)
@@ -38,7 +38,7 @@ print(typeS)
 # l_two.t_correct.sign(n=NA, mean=.2) |>
 # 	Spower(power=1-typeS, interval=c(10, 200))
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$typeS.N <- getLastSpower()
 typeS.N <- store$typeS.N
 print(typeS.N)
@@ -60,7 +60,7 @@ l_two.t_correct.sign(100, mean=.5)
 ## ----eval=eval----------------------------------------------------------------
 # l_two.t_correct.sign(n=15, mean=.2) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$typeS2 <- getLastSpower()
 typeS2 <- store$typeS2
 print(typeS2)
@@ -84,7 +84,7 @@ print(typeS2)
 # l_two.t_typeM(n=50, mean=.2) |> Spower(select='retain') -> typeM
 # typeM
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$typeM <- getLastSpower()
 typeM <- store$typeM
 print(typeM)
@@ -100,7 +100,7 @@ with(results, hist(M, 30))
 # l_two.t_typeM(n=100, mean=.2) |> Spower(select='retain') -> typeM2
 # typeM2
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$typeM2 <- getLastSpower()
 typeM2 <- store$typeM2
 print(typeM2)

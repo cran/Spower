@@ -33,7 +33,7 @@ l_single.t(100, mean=.2)
 ## ----eval=eval----------------------------------------------------------------
 # p_single.t(n=100, mean=.3) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$pPower <- getLastSpower()
 pPower <- store$pPower
 print(pPower)
@@ -41,7 +41,7 @@ print(pPower)
 ## ----eval=eval----------------------------------------------------------------
 # l_single.t(n=100, mean=.3) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$lPower <- getLastSpower()
 lPower <- store$lPower
 print(lPower)
@@ -75,7 +75,7 @@ l_precision <- function(n, mean, CI.width, mu=0, alpha=.05){
 # # l_precision(n=NA, mean=.2, CI.width=1/4) |>
 # #  	 Spower(power=.80, interval=c(10, 500))
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$lprecision <- getLastSpower()
 lprecision <- store$lprecision
 print(lprecision)
@@ -84,7 +84,7 @@ print(lprecision)
 # l_precision(n=interval(10, 500), mean=.2, CI.width=Inf) |>
 # 	Spower(power=.80)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$lprecision2 <- getLastSpower()
 lprecision2 <- store$lprecision2
 print(lprecision2)
@@ -101,7 +101,7 @@ print(lprecision2)
 # l_single.Bayes.t_BF(n=100, mean=.5, mu=.3) |> Spower(select='largeBF') -> BFsim
 # BFsim
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$prospectiveBF3 <- getLastSpower()
 BFsim <- store$prospectiveBF3
 print(BFsim)
@@ -135,7 +135,7 @@ ggplot(BFresults, aes(log(bf), fill=largeBF)) +
 # pp_single.Bayes.t(n=100, mean=.5, mu=.3) |>
 # 	Spower(sig.level = .90, sig.direction = 'above')
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$prospectiveBayes <- getLastSpower()
 prospectiveBayes <- store$prospectiveBayes
 print(prospectiveBayes)
@@ -154,7 +154,7 @@ l_equiv.t <- function(n, delta, equiv, sds = c(1,1),
 # l_equiv.t(50, delta=1, equiv=c(-2.5, 2.5),
 # 		  sds=c(2.5, 2.5)) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$equivT <- getLastSpower()
 equivT <- store$equivT
 print(equivT)
@@ -181,7 +181,7 @@ l_equiv.t_CI <- function(n, delta, equiv,
 # l_equiv.t_CI(50, delta=1, equiv=c(-2.5, 2.5),
 # 		  sds=c(2.5, 2.5)) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$equivTL <- getLastSpower()
 equivTL <- store$equivTL
 print(equivTL)
@@ -206,7 +206,7 @@ print(equivTL)
 # rope.lm(n=50, beta0=2, beta1=1, sigma=1/2, range=c(.8, 1.2)) |>
 # 	Spower(sig.level=.95, sig.direction='above', parallel=TRUE)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ROPE.lm <- getLastSpower()
 ROPE.lm <- store$ROPE.lm
 print(ROPE.lm)
@@ -215,7 +215,7 @@ print(ROPE.lm)
 # rope.lm(n=interval(50, 200), beta0=2, beta1=1, sigma=1/2, range=c(.8, 1.2)) |>
 # 	Spower(power=.80, sig.level=.95, sig.direction='above', parallel=TRUE)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ROPE.lm_n <- getLastSpower()
 ROPE.lm_n <- store$ROPE.lm_n
 print(ROPE.lm_n)

@@ -19,7 +19,7 @@ p_lm.R2(50, k=3, R2=.3)
 ## ----eval=eval----------------------------------------------------------------
 # p_lm.R2(50, k=3, R2=.3) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$R2ex <- getLastSpower()
 print(store$R2ex)
 
@@ -38,7 +38,7 @@ p_single.t(n=100, mean=.2)
 # p_single.t(n=100, mean=.5, mu=.3) |> Spower() -> prospective
 # prospective
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$prospective <- prospective
 prospective <- store$prospective
 print(prospective)
@@ -48,7 +48,7 @@ print(prospective)
 # 	Spower(beta_alpha=4) -> compromise
 # compromise
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$compromise <- getLastSpower()
 compromise <- store$compromise
 print(compromise)
@@ -57,7 +57,7 @@ print(compromise)
 # satisfies q = 4 ratio
 with(compromise, (1 - power) / sig.level)
 
-## -----------------------------------------------------------------------------
+## ----collapse=TRUE------------------------------------------------------------
 # using previous post-hoc/prospective power analysis
 update(prospective, beta_alpha=4)
 
@@ -65,21 +65,21 @@ update(prospective, beta_alpha=4)
 # p_single.t(n=NA, mean=.5) |>
 # 	Spower(power=.8, interval=c(20,200))
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$apriori <- getLastSpower()
 print(store$apriori)
 
 ## ----eval=FALSE---------------------------------------------------------------
 # p_single.t(n=interval(20, 200), mean=.5) |> Spower(power=.8)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 print(store$apriori)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_single.t(n=100, mean=NA) |>
 # 	Spower(power=.8, interval=c(.1, 3))
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$sensitive <- getLastSpower()
 print(store$sensitive)
 
@@ -90,7 +90,7 @@ print(store$sensitive)
 # p_single.t(n=50, mean=.5) |>
 # 	Spower(power=.8, sig.level=NA)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$criterion <- getLastSpower()
 print(store$criterion)
 
@@ -99,7 +99,7 @@ print(store$criterion)
 # 	SpowerBatch(n=c(30, 60, 90)) -> prospective.batch
 # prospective.batch
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$prospective.batch <- prospective.batch
 prospective.batch <- store$prospective.batch
 print(prospective.batch)
@@ -112,7 +112,7 @@ as.data.frame(prospective.batch)
 # 	SpowerBatch(power=c(.7, .8, .9), interval=c(20, 200))
 # apriori.batch
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$apriori.batch <- apriori.batch
 apriori.batch <- store$apriori.batch
 print(apriori.batch)
@@ -124,7 +124,7 @@ as.data.frame(apriori.batch)
 # p_single.t(mean=.5) |>
 # 	SpowerCurve(n=c(30, 60, 90, 120))
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval)
 	store$gg1 <- p_single.t(mean=.5) |> SpowerCurve(n=c(30, 60, 90, 120))
 print(store$gg1)
@@ -133,7 +133,7 @@ print(store$gg1)
 # # pass previous SpowerBatch() object
 # SpowerCurve(batch=batch)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) 
 	SpowerCurve(batch=store$prospective.batch)	
 
@@ -141,7 +141,7 @@ if(eval)
 # p_single.t() |>
 # 	SpowerCurve(n=c(30, 60, 90, 120), mean=c(.2, .5, .8))
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval)
 	store$gg2 <- p_single.t() |> 
 		SpowerCurve(n=c(30, 60, 90, 120), mean=c(.2, .5, .8))

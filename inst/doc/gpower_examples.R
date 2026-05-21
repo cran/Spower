@@ -16,7 +16,7 @@ getwd()
 ## ----eval=eval----------------------------------------------------------------
 # p_r(n = interval(500, 3000), r = .65, rho = .60) |> Spower(power = .95)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex3.3 <- getLastSpower()
 print(store$ex3.3)
 
@@ -27,14 +27,14 @@ print(store$ex3.3)
 ## ----eval=eval----------------------------------------------------------------
 # p_r(n = 100, r = .3) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$rconst <- getLastSpower()
 print(store$rconst)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_r(n = interval(50, 1000), r = .3) |> Spower(power = .95)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$rconst2 <- getLastSpower()
 print(store$rconst2)
 
@@ -44,7 +44,7 @@ pwr::pwr.r.test(r=.3, power=.95, n=NULL)
 ## ----eval=eval----------------------------------------------------------------
 # p_2r(n=206, r.ab=.75, r.ab2=.88, n2_n1=51/206) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$rineq <- getLastSpower()
 print(store$rineq)
 
@@ -64,7 +64,7 @@ Cp
 # p_2r(n=interval(500, 2000), r.ab=.1, r.ac=.5, r.ad=.4, r.bc=-.4, r.bd=.8, r.cd=.2, two.tailed=FALSE) |>
 # 	Spower(power = .80)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.28.3.1 <- getLastSpower()
 print(store$ex.28.3.1)
 
@@ -75,14 +75,14 @@ Cp[c(4,3,1),c(4,3,1)]
 # p_2r(n=interval(50, 500), r.ab=.4, r.ac=.2, r.bc=.5, two.tailed=FALSE) |>
 # 	Spower(power = .80)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.28.3.2 <- getLastSpower()
 print(store$ex.28.3.2)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_2r(n=144, r.ab=.4, r.ac=.2, r.bc=.5, two.tailed=FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.28.3.2b <- getLastSpower()
 print(store$ex.28.3.2b)
 
@@ -90,7 +90,7 @@ print(store$ex.28.3.2b)
 # # confirm solution obtained by G*power (post hoc power estimate)
 # p_2r(n=144, r.ab=.4, r.ac=0.047702, r.bc=-0.6, two.tailed=FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.28.3.3 <- getLastSpower()
 print(store$ex.28.3.3)
 
@@ -100,7 +100,7 @@ print(store$ex.28.3.3)
 # p_2r(n=144, r.ab=.4, r.ac=interval(.4, .001), r.bc=-0.6, two.tailed=FALSE) |>
 # 	Spower(power = .80)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.28.3.3b <- getLastSpower()
 print(store$ex.28.3.3b)
 
@@ -110,7 +110,7 @@ print(store$ex.28.3.3b)
 # 	Spower(power = .95)
 # out
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.16.3 <- getLastSpower()
 out <- store$ex.16.3
 print(store$ex.16.3)
@@ -150,7 +150,7 @@ c(tauX, tauY)
 # p_prop.test(n=20, prop=p, pi=pi, two.tailed=FALSE) |>
 # 	Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.4.3 <- getLastSpower()
 print(store$ex.4.3)
 
@@ -159,7 +159,7 @@ print(store$ex.4.3)
 # p_prop.test(n=20, prop=p, pi=pi, exact=TRUE,
 # 			two.tailed=FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.4.3b <- getLastSpower()
 print(store$ex.4.3b)
 
@@ -167,7 +167,7 @@ print(store$ex.4.3b)
 # p_wilcox.test(n=649, d=.1, type='one.sample', two.tailed=FALSE) |>
 # 	Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.22.1 <- getLastSpower()
 print(store$ex.22.1)
 
@@ -178,7 +178,7 @@ print(store$ex.22.1)
 # 				d=c(.1, .2, .4, .6, .8, 1.0), replications = 50000, fully.crossed=FALSE)
 # as.data.frame(out)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.22.1b <- getLastSpower()
 print(as.data.frame(store$ex.22.1b))
 
@@ -193,7 +193,7 @@ print(as.data.frame(store$ex.22.1b))
 # p_wilcox.test(n=11, d=.8, parent1=parent, type='one.sample',
 # 			  two.tailed=FALSE, correct = FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.4.3c <- getLastSpower()
 print(store$ex.4.3c)
 
@@ -205,7 +205,7 @@ print(store$ex.4.3c)
 # 				d=c(.1, .2, .4, .6, .8, 1.0), replications=50000, fully.crossed=FALSE)
 # as.data.frame(out)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.4.3d <- getLastSpower()
 print(as.data.frame(store$ex.4.3d))
 
@@ -218,7 +218,7 @@ obrien2002
 ## ----eval=eval----------------------------------------------------------------
 # p_mcnemar.test(n=50, prop=obrien2002, two.tailed=FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.5.3 <- getLastSpower()
 print(store$ex.5.3)
 
@@ -227,28 +227,28 @@ print(store$ex.5.3)
 # disc <- obrien2002[1,2] + obrien2002[2,1]
 # p_mcnemar.test(n=50, OR=OR, prop.disc=disc, two.tailed=FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.5.3b <- getLastSpower()
 print(store$ex.5.3b)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_mcnemar.test(n=50, prop=obrien2002, two.tailed=FALSE, correct=FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.5.3c <- getLastSpower()
 print(store$ex.5.3c)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_lm.R2(n=95, R2=.1, k=5) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.13.1 <- getLastSpower()
 print(store$ex.13.1)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_lm.R2(n=90, R2=.3, k=9, R2_0=.25, k.R2_0=5) |> Spower(sig.level=.01)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.14.3 <- getLastSpower()
 print(store$ex.14.3)
 
@@ -256,7 +256,7 @@ print(store$ex.14.3)
 # p_lm.R2(n=interval(100, 400), R2=.3, R2_0 = .25, k=9, k.R2_0=5) |>
 # 		Spower(sig.level=.01, power=.8)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.14.3b <- getLastSpower()
 print(store$ex.14.3b)
 
@@ -264,35 +264,35 @@ print(store$ex.14.3b)
 # p_lm.R2(n=200, R2=.16, R2_0 = .1, k=12, k.R2_0=9, R2.resid=.8) |>
 # 	Spower(sig.level=.01)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.14.3c <- getLastSpower()
 print(store$ex.14.3c)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_lm.R2(n=95, R2=.1, k=5, fixed=FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.7.3 <- getLastSpower()
 print(store$ex.7.3)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_slr(n=100, beta=-0.0667, sd_x=7.5, sd_y = 4) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.12.3 <- getLastSpower()
 print(store$ex.12.3)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_anova.test(n=interval(20, 300), k=10, f=.25) |>  Spower(power=.95)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.10.3 <- getLastSpower()
 print(store$ex.10.3)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_anova.test(n=20, k=10, f=.25) |> Spower(beta_alpha=1, replications=30000)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.10.3b <- getLastSpower()
 print(store$ex.10.3b)
 
@@ -313,7 +313,7 @@ gen_twogroup <- function(n, dbeta, sdx1, sdx2, sigma, n2_n1 = 1, ...){
 # 	  n=28, n2_n1=44/28, sdx1=9.02914, sdx2=11.86779, dbeta=0.01592,
 # 	  sigma=0.5578413, gen_fun=gen_twogroup) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.17.3 <- getLastSpower()
 print(store$ex.17.3)
 
@@ -323,7 +323,7 @@ print(store$ex.17.3)
 # 	  sigma=0.5578413, gen_fun=gen_twogroup) |>
 # 	Spower(power=.8)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.17.3b <- getLastSpower()
 print(store$ex.17.3b)
 
@@ -331,7 +331,7 @@ print(store$ex.17.3b)
 # p_var.test(n=interval(10, 200), vars=1, sigma2=1.5, two.tailed=FALSE) |>
 # 	Spower(power=.80)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.26.3 <- getLastSpower()
 print(store$ex.26.3)
 
@@ -340,7 +340,7 @@ print(store$ex.26.3)
 # p_var.test(n=interval(50, 300), vars=c(1, 1.5), two.tailed=TRUE) |>
 # 	Spower(power=.80)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.15.3 <- getLastSpower()
 print(store$ex.15.3)
 
@@ -348,7 +348,7 @@ print(store$ex.15.3)
 # (out <- p_t.test(n = interval(10,500), d = .5, two.tailed=FALSE) |>
 # 			   Spower(power = .95))
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.15.3b <- getLastSpower()
 out <- store$ex.15.3b
 print(store$ex.15.3b)
@@ -359,14 +359,14 @@ so <- summary(out)
 ## ----eval=eval----------------------------------------------------------------
 # p_t.test(n=50 * 2, d=0.421637, type = 'paired') |> Spower(replications=50000)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.19.3 <- getLastSpower()
 print(store$ex.19.3)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_t.test(n=50 * 2, d=.2828427, type = 'paired') |> Spower(replications=50000)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.19.3b <- getLastSpower()
 print(store$ex.19.3b)
 
@@ -374,7 +374,7 @@ print(store$ex.19.3b)
 # p_t.test(n=interval(100,300), d=0.2828427, type = 'paired') |>
 # 	Spower(power=0.832114)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.19.3c <- getLastSpower()
 print(store$ex.19.3c)
 
@@ -382,7 +382,7 @@ print(store$ex.19.3c)
 # p_t.test(n=interval(10, 100), d=.625, two.tailed=FALSE, type='one.sample') |>
 # 	Spower(power=.95)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.20.3 <- getLastSpower()
 print(store$ex.20.3)
 
@@ -390,14 +390,14 @@ print(store$ex.20.3)
 # p_t.test(n=interval(100,2000), d=.1, type='one.sample') |>
 # 	Spower(power=.9,sig.level=.01)
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.20.3b <- getLastSpower()
 print(store$ex.20.3b)
 
 ## ----eval=eval----------------------------------------------------------------
 # p_wilcox.test(n=649, d=.1, type='one.sample', two.tailed=FALSE) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.22.1 <- getLastSpower()
 print(store$ex.22.1)
 
@@ -410,7 +410,7 @@ print(store$ex.22.1)
 # 
 # p_wilcox.test(n=11, d=.8, type='one.sample', two.tailed=FALSE, parent1 = parent1) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.22.1b <- getLastSpower()
 print(store$ex.22.1b)
 
@@ -428,7 +428,7 @@ print(store$ex.22.1b)
 # p_wilcox.test(n=67, n2_n1=nr, d=0.375, parent1=parent1, parent2=parent2) |>
 # 	Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.22.1c <- getLastSpower()
 print(store$ex.22.1c)
 
@@ -442,7 +442,7 @@ print(store$ex.22.1c)
 # p_wilcox.test(n=10*2, d=1.13842, type = 'paired',
 # 			  parent1=parent1, parent2=parent2) |> Spower()
 
-## ----echo=FALSE---------------------------------------------------------------
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$ex.23.3 <- getLastSpower()
 print(store$ex.23.3)
 
