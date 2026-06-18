@@ -12,9 +12,9 @@
 
 <meta name="author" content="Phil Chalmers" />
 
-<meta name="date" content="2026-05-21" />
+<meta name="date" content="2026-06-18" />
 
-<title>Type M and Type S errors</title>
+<title>Conditional Power Analyses via Type M and Type S errors</title>
 
 <script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
 // v0.0.1
@@ -341,9 +341,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Type M and Type S errors</h1>
+<h1 class="title toc-ignore">Conditional Power Analyses via Type M and Type S errors</h1>
 <h4 class="author">Phil Chalmers</h4>
-<h4 class="date">May 21, 2026</h4>
+<h4 class="date">June 18, 2026</h4>
 
 
 <div id="TOC">
@@ -369,19 +369,23 @@ for <span class="math inline">\(H_1\)</span> across independent samples. Specifi
 rejected in light of the alternative being true, however
 <em>the rejection is in the wrong direction of the underlying effect</em>. Hence,
 conditional on a “statistical significance” decision, what is the
-probability that the correct sign was inferred?
+probability that the correct <em>sign</em> was inferred?
 <ul>
 <li>Ideally Type S errors should be close to 0.</li>
-<li>In the limiting case, where <span class="math inline">\(H_0\)</span> is true (no effect at all), then<br />
-Type S errors will be .50 as the sign will be a coin-flip</li>
+<li>As the magnitude of an effect sizes approaches <span class="math inline">\(H_0\)</span> (i.e., there is no effect) the<br />
+the probability of a making a Type S error will tend to .50</li>
 <li>Type S errors are particularly prevalent in under powered
 research studies, where the sampling variability could result in
 detection of an effect that happens to be <em>opposite</em> what should
 have been detected from the population generating structure</li>
 </ul></li>
 <li><strong>Type M errors</strong>, on the other hand, occur when the <em>magnitude</em> of
-a detected effect is <em>much larger</em> than the expected effect given that
-“statistical significance” has occurred.
+a detected effect is <em>much larger</em> than the true/expected effect, and was likely the
+very reason why “statistical significance” occurred in the first place. These types
+of errors are effectively errors of exaggeration, occurring due to larger sampling variability,
+and should be treated as “too large” to be taken seriously (e.g., an observed Cohen’s <span class="math inline">\(d\)</span> estimate
+of 5 is often highly unlikely in practice, such as in psychological research,
+but surely would be flagged as significant even in the smallest of samples drawn from a population).
 <ul>
 <li>Gelman and Carlin (2014) presented this as a ratio idea
 (<span class="math inline">\(M=E(\frac{|estimate|}{parameter})\)</span>), where large ratios
@@ -434,7 +438,7 @@ are relevant to the power analysis under investigation.</p>
 ## 
 ## Estimate of power: 0.924
 ## 95% Confidence Interval: [0.919, 0.929]
-## Execution time (H:M:S): 00:00:21</code></pre>
+## Execution time (H:M:S): 00:00:06</code></pre>
 <p>From the output from <code>Spower()</code>, the <code>power</code> information reflects the
 estimated probability that the correct sign
 decision was made given that “significance” was observed, while <span class="math inline">\(1-power\)</span>
@@ -449,8 +453,7 @@ little frequency (hence, high conditional sign power). Further suppose we
 only want to make a Type S error, say, 1/100 times a significant effect
 is observed. The following code evaluates how to obtain such an <span class="math inline">\(n\)</span> estimate.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>typeS &lt;-<span class="st"> </span><span class="fl">.01</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dt">n=</span><span class="ot">NA</span>, <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power=</span><span class="dv">1</span><span class="op">-</span>typeS, <span class="dt">interval=</span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">200</span>))</span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">l_two.t_correct.sign</span>(<span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">10</span>, <span class="dv">200</span>), <span class="dt">mean=</span>.<span class="dv">2</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">power=</span><span class="dv">1</span><span class="op">-</span>typeS)</span></code></pre></div>
 <pre><code>## 
 ## ── Spower Results ──────────────────────────────────────────────────────────────
 ## 
@@ -463,14 +466,14 @@ is observed. The following code evaluates how to obtain such an <span class="mat
 ## 
 ## Estimate of n: 47.7
 ## 95% Confidence Interval: [44.1, 51.7]
-## Execution time (H:M:S): 00:00:18</code></pre>
+## Execution time (H:M:S): 00:00:05</code></pre>
 <p>Hence, one would need a sample size of approximately
 48 per group in order to have a Type S error be
 approximately 1%.</p>
 </div>
 <div id="implementation-using-built-in-p_t.test-function" class="section level2">
 <h2>Implementation using built-in <code>p_t.test()</code> function</h2>
-<p>Alternatively, if the simulation function and analysis already appear in the context
+<p>Alternatively, and often preferably, if the simulation function and analysis already appear in the context
 of the package definition then <code>Spower</code>’s internally defined <code>p_*</code> functions can be used
 in place of the complete manual implementation. This is beneficial as the data generation and analysis components then
 do not need to be written by the front-end user, potentially avoiding implementation issues using
@@ -511,7 +514,7 @@ user does not have to.</p>
 ## 
 ## Estimate of power: 0.925
 ## 95% Confidence Interval: [0.920, 0.930]
-## Execution time (H:M:S): 00:00:28</code></pre>
+## Execution time (H:M:S): 00:00:08</code></pre>
 <p>If at all possible it is recommended to use the <code>return_analysis</code> approach as the simulation experiments defined within the package have all been well tested. The trade-off, as it is with all higher-level functions in R, is that there will often be slightly more overhead than user-defined functions, though of course the latter approach comes at the cost of safety.</p>
 </div>
 </div>
@@ -533,7 +536,7 @@ in <code>Spower</code> if a <code>list</code> or
 however, output information relevant to the <code>power</code> computations
 (probability values/logicals) must be explicitly specified using
 <code>Spower(..., select)</code> so that other values returned from the simulation are
-stored but not summarised.</p>
+stored but not summarized.</p>
 <p>As before, the first step is to define the experiment using the conditional
 <span class="math inline">\(p\)</span>-value logic nested within a <code>while()</code> loop, followed by the power (and extra) criteria of interest.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>l_two.t_typeM &lt;-<span class="st"> </span><span class="cf">function</span>(n, mean, <span class="dt">mu =</span> <span class="dv">0</span>, </span>
@@ -565,7 +568,7 @@ the following.</p>
 ## 
 ## Estimate of power: 0.861
 ## 95% Confidence Interval: [0.854, 0.868]
-## Execution time (H:M:S): 00:00:19</code></pre>
+## Execution time (H:M:S): 00:00:05</code></pre>
 <p>In this case, <code>power</code> represents the probability that, given a
 significant result was observed, the resulting <span class="math inline">\(M\)</span> ratio was less than the
 cutoff of 3 (hence, was less than three times the true effect size). The
@@ -617,7 +620,7 @@ issues, as seen below by doubling the sample size below.</p>
 ## 
 ## Estimate of power: 0.991
 ## 95% Confidence Interval: [0.989, 0.993]
-## Execution time (H:M:S): 00:00:14</code></pre>
+## Execution time (H:M:S): 00:00:04</code></pre>
 <p>where the Type M error for the <span class="math inline">\(M.ratio = 3\)</span> cutoff is now</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>last &lt;-<span class="st"> </span><span class="kw">getLastSpower</span>()</span>
 <span id="cb21-2"><a href="#cb21-2"></a><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>last<span class="op">$</span>power</span></code></pre></div>

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Phil Chalmers" />
 
-<meta name="date" content="2026-05-21" />
+<meta name="date" content="2026-06-18" />
 
 <title>G*Power examples evaluated with Spower</title>
 
@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">G*Power examples evaluated with Spower</h1>
 <h4 class="author">Phil Chalmers</h4>
-<h4 class="date">May 21, 2026</h4>
+<h4 class="date">June 18, 2026</h4>
 
 
 <div id="TOC">
@@ -439,7 +439,7 @@ probability when <span class="math inline">\(\rho=.65\)</span>.</p>
 ## 
 ## Estimate of n: 1931.4
 ## 95% Confidence Interval: [1901.1, 1958.2]
-## Execution time (H:M:S): 00:00:23</code></pre>
+## Execution time (H:M:S): 00:00:09</code></pre>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># this is equivalent (not run):</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co"># p_r(n = NA, r = .65, rho = .60) |&gt; Spower(power = .95, interval=c(500,3000))</span></span></code></pre></div>
 <p>G*power estimates this <span class="math inline">\(n\)</span> to be 1929 using the Fisher
@@ -449,7 +449,7 @@ definition as well.</p>
 <div id="test-against-constant-rho_00" class="section level3">
 <h3>Test against constant <span class="math inline">\(\rho_0=0\)</span></h3>
 <p>The more canonical version hypotheses involving correlation coefficients
-appear when <span class="math inline">\(rho_0=0\)</span>, as these do not require the Fisher approximation.
+appear when <span class="math inline">\(\rho_0=0\)</span>, as these do not require the Fisher approximation.
 For instance, the power associated with <span class="math inline">\(\rho = .3\)</span> with 100 pairs of
 observations, tested against <span class="math inline">\(\rho_0=0\)</span>, results in the following.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">p_r</span>(<span class="dt">n =</span> <span class="dv">100</span>, <span class="dt">r =</span> <span class="fl">.3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
@@ -465,7 +465,7 @@ observations, tested against <span class="math inline">\(\rho_0=0\)</span>, resu
 ## 
 ## Estimate of power: 0.861
 ## 95% Confidence Interval: [0.854, 0.867]
-## Execution time (H:M:S): 00:00:12</code></pre>
+## Execution time (H:M:S): 00:00:04</code></pre>
 <p>Next, the sample sample size estimate required to reject
 <span class="math inline">\(H_0:\, \rho_0=0\)</span> in correlation analysis with <span class="math inline">\(1-\beta=.95\)</span> probability
 when <span class="math inline">\(\rho=.3\)</span> is expressed as</p>
@@ -482,7 +482,7 @@ when <span class="math inline">\(\rho=.3\)</span> is expressed as</p>
 ## 
 ## Estimate of n: 138.3
 ## 95% Confidence Interval: [136.1, 140.4]
-## Execution time (H:M:S): 00:00:19</code></pre>
+## Execution time (H:M:S): 00:00:07</code></pre>
 <p>G*power 3.1 provides the same estimate as the <code>pwr</code> package in this
 case, which for comparison is presented below.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>pwr<span class="op">::</span><span class="kw">pwr.r.test</span>(<span class="dt">r=</span>.<span class="dv">3</span>, <span class="dt">power=</span>.<span class="dv">95</span>, <span class="dt">n=</span><span class="ot">NULL</span>)</span></code></pre></div>
@@ -508,14 +508,14 @@ sample (<span class="math inline">\(r=.88\)</span>) contained only <span class="
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 5
-##       n  r.ab r.ab2 sig.level power
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
-## 1   206  0.75  0.88      0.05 NA
+## # A tibble: 1 × 6
+##       n  r.ab r.ab2   n2_n1 sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   206  0.75  0.88 0.24757      0.05 NA
 ## 
 ## Estimate of power: 0.727
 ## 95% Confidence Interval: [0.718, 0.735]
-## Execution time (H:M:S): 00:00:27</code></pre>
+## Execution time (H:M:S): 00:00:10</code></pre>
 <p>G*power 3.1 returns the power of .726 in this context.</p>
 </div>
 <div id="example-28.3.1-correlation---inequality-of-two-dependent-pearson-rs-no-common-index" class="section level3">
@@ -547,14 +547,14 @@ where in this case <span class="math inline">\(\rho_{ab} = .5\)</span> and <span
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 9
-##       n  r.ab  r.ac  r.ad  r.bd  r.cd two.tailed sig.level power
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;dbl&gt;
-## 1    NA   0.1   0.5   0.4   0.8   0.2 FALSE           0.05   0.8
+## # A tibble: 1 × 10
+##       n  r.ab  r.ac  r.bc  r.ad  r.bd  r.cd two.tailed sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA   0.1   0.5  -0.4   0.4   0.8   0.2 FALSE           0.05   0.8
 ## 
 ## Estimate of n: 886.2
 ## 95% Confidence Interval: [875.3, 897.3]
-## Execution time (H:M:S): 00:01:39</code></pre>
+## Execution time (H:M:S): 00:00:41</code></pre>
 <p>G*power 3.1 returns the required sample size of <span class="math inline">\(N=886\)</span>.</p>
 </div>
 <div id="example-28.3.2-correlation---inequality-of-two-dependent-pearson-rs-common-index" class="section level3">
@@ -582,7 +582,7 @@ where <span class="math inline">\(\rho_{ab} = .2\)</span> and <span class="math 
 ## 
 ## Estimate of n: 134.7
 ## 95% Confidence Interval: [133.1, 136.3]
-## Execution time (H:M:S): 00:01:22</code></pre>
+## Execution time (H:M:S): 00:00:33</code></pre>
 <p>G*power 3.1 returns the required sample size of <span class="math inline">\(N=144\)</span>, which interestingly is slightly higher than the simulation version from <code>Spower</code>. Providing <span class="math inline">\(N=144\)</span> to the above to obtain the power estimate gives the following:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">p_2r</span>(<span class="dt">n=</span><span class="dv">144</span>, <span class="dt">r.ab=</span>.<span class="dv">4</span>, <span class="dt">r.ac=</span>.<span class="dv">2</span>, <span class="dt">r.bc=</span>.<span class="dv">5</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
@@ -597,7 +597,7 @@ where <span class="math inline">\(\rho_{ab} = .2\)</span> and <span class="math 
 ## 
 ## Estimate of power: 0.831
 ## 95% Confidence Interval: [0.824, 0.839]
-## Execution time (H:M:S): 00:00:22</code></pre>
+## Execution time (H:M:S): 00:00:09</code></pre>
 </div>
 <div id="example-28.3.3-sensitivity-analysis" class="section level3">
 <h3>Example 28.3.3; sensitivity analysis</h3>
@@ -609,14 +609,14 @@ where <span class="math inline">\(\rho_{ab} = .2\)</span> and <span class="math 
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 6
-##       n  r.ab     r.ac two.tailed sig.level power
-##   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;lgl&gt;
-## 1   144   0.4 0.047702 FALSE           0.05 NA
+## # A tibble: 1 × 7
+##       n  r.ab     r.ac  r.bc two.tailed sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;lgl&gt;
+## 1   144   0.4 0.047702  -0.6 FALSE           0.05 NA
 ## 
 ## Estimate of power: 0.815
 ## 95% Confidence Interval: [0.808, 0.823]
-## Execution time (H:M:S): 00:00:22</code></pre>
+## Execution time (H:M:S): 00:00:08</code></pre>
 <p>Obtaining a similar estimate using <code>Spower()</code> requires the following sensitivity analysis structure:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># note that interval is specified as c(upper, lower) as higher values</span></span>
 <span id="cb24-2"><a href="#cb24-2"></a><span class="co"># of r.ac result in lower power in this context</span></span>
@@ -627,14 +627,14 @@ where <span class="math inline">\(\rho_{ab} = .2\)</span> and <span class="math 
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 6
-##       n  r.ab  r.ac two.tailed sig.level power
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;dbl&gt;
-## 1   144   0.4    NA FALSE           0.05   0.8
+## # A tibble: 1 × 7
+##       n  r.ab  r.ac  r.bc two.tailed sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;dbl&gt;
+## 1   144   0.4    NA  -0.6 FALSE           0.05   0.8
 ## 
 ## Estimate of r.ac: 0.048
 ## 95% Confidence Interval: [0.046, 0.050]
-## Execution time (H:M:S): 00:01:41</code></pre>
+## Execution time (H:M:S): 00:00:41</code></pre>
 <p>For this example, <code>Spower</code> and G*power 3.1 seem to agree.</p>
 </div>
 <div id="example-16.3-point-biserial-correlation" class="section level3">
@@ -659,7 +659,7 @@ under the null <span class="math inline">\(H_0:\rho\le0\)</span> (hence, is one-
 ## 
 ## Estimate of n: 81.7
 ## 95% Confidence Interval: [79.1, 85.4]
-## Execution time (H:M:S): 00:00:13</code></pre>
+## Execution time (H:M:S): 00:00:04</code></pre>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># total sample size required</span></span>
 <span id="cb28-2"><a href="#cb28-2"></a><span class="kw">ceiling</span>(out<span class="op">$</span>n) <span class="op">*</span><span class="st"> </span><span class="dv">2</span></span></code></pre></div>
 <pre><code>## [1] 164</code></pre>
@@ -701,16 +701,18 @@ tetrachoric correlation is less than or equal to 0 in this population
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="kw">p_r.cat</span>(<span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">100</span>, <span class="dv">500</span>), <span class="dt">r=</span><span class="fl">0.2399846</span>, <span class="dt">tauX=</span>tauX, <span class="dt">tauY=</span>tauY, </span>
 <span id="cb36-2"><a href="#cb36-2"></a>        <span class="dt">score=</span><span class="ot">TRUE</span>, <span class="dt">two.tailed=</span><span class="ot">FALSE</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
 <span id="cb36-3"><a href="#cb36-3"></a><span class="st">    </span><span class="kw">Spower</span>(<span class="dt">power =</span> <span class="fl">.95</span>, <span class="dt">parallel=</span><span class="ot">TRUE</span>)</span></code></pre></div>
-<pre><code>## 
-## Design conditions: 
+<pre><code>## ── Spower Results ───────────────────────────────────────────────────────────
 ## 
-## # A tibble: 1 × 8
-##       n     r   tauX   tauY score two.tailed sig.level power
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;dbl&gt;
-## 1    NA 0.240 -0.206 -0.259 FALSE FALSE           0.05  0.95
+## Design conditions:
 ## 
-## Estimate of n: 462.9
-## 95% Prediction Interval: [458.5, 466.6]</code></pre>
+## # A tibble: 1 × 6
+##       n       r two.tailed score sig.level power
+##   &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt;      &lt;lgl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA 0.23998 FALSE      TRUE       0.05  0.95
+## 
+## Estimate of n: 460.0
+## 95% Confidence Interval: [455.8, 464.6]
+## Execution time (H:M:S): 00:07:23</code></pre>
 <p>G*power gives <span class="math inline">\(n=463\)</span>, though uses the SE value at the null (Score
 test). <code>p_r.cat()</code>, on the other hand, defaults to the Wald approach
 where the SE is at the maximum-likelihood estimate (MLE); hence,
@@ -749,7 +751,7 @@ as-is.</p>
 ## 
 ## Estimate of power: 0.416
 ## 95% Confidence Interval: [0.406, 0.425]
-## Execution time (H:M:S): 00:00:04</code></pre>
+## Execution time (H:M:S): 00:00:01</code></pre>
 <p>G*power gives the estimate <span class="math inline">\(1-\beta=.4112\)</span>. Note that with
 <code>p_prop.test()</code>, the Fisher’s exact version of this test is also
 supported by passing the argument <code>exact = TRUE</code>.</p>
@@ -768,7 +770,7 @@ supported by passing the argument <code>exact = TRUE</code>.</p>
 ## 
 ## Estimate of power: 0.411
 ## 95% Confidence Interval: [0.402, 0.421]
-## Execution time (H:M:S): 00:00:04</code></pre>
+## Execution time (H:M:S): 00:00:01</code></pre>
 </div>
 <div id="example-22.1-wilcoxon-signed-rank-test" class="section level3">
 <h3>Example 22.1; Wilcoxon signed-rank test</h3>
@@ -789,7 +791,7 @@ follow a Normal/Gaussian shape (default).</p>
 ## 
 ## Estimate of power: 0.799
 ## 95% Confidence Interval: [0.791, 0.806]
-## Execution time (H:M:S): 00:00:22</code></pre>
+## Execution time (H:M:S): 00:00:08</code></pre>
 <p>G*power gives the power estimate of .800.</p>
 <p>The following partially recreates the simulation results in Figure 29
 (which itself was partially extracted from Shieh, Jan, and Randles,
@@ -804,8 +806,13 @@ the analyses.</p>
 <span id="cb44-3"><a href="#cb44-3"></a><span class="st">    </span><span class="kw">SpowerBatch</span>(<span class="dt">n=</span><span class="kw">c</span>(<span class="dv">649</span>, <span class="dv">164</span>, <span class="dv">42</span>, <span class="dv">20</span>, <span class="dv">12</span>, <span class="dv">9</span>),</span>
 <span id="cb44-4"><a href="#cb44-4"></a>                <span class="dt">d=</span><span class="kw">c</span>(.<span class="dv">1</span>, <span class="fl">.2</span>, <span class="fl">.4</span>, <span class="fl">.6</span>, <span class="fl">.8</span>, <span class="fl">1.0</span>), <span class="dt">replications =</span> <span class="dv">50000</span>, <span class="dt">fully.crossed=</span><span class="ot">FALSE</span>)</span>
 <span id="cb44-5"><a href="#cb44-5"></a><span class="kw">as.data.frame</span>(out)</span></code></pre></div>
-<pre><code>##        n   d       type two.tailed sig.level  power    CI_2.5   CI_97.5
-## power 11 0.8 one.sample      FALSE      0.05 0.8147 0.8070847 0.8223153</code></pre>
+<pre><code>##     n   d       type two.tailed sig.level   power    CI_2.5   CI_97.5
+## 1 649 0.1 one.sample      FALSE      0.05 0.80156 0.7980642 0.8050558
+## 2 164 0.2 one.sample      FALSE      0.05 0.80116 0.7976616 0.8046584
+## 3  42 0.4 one.sample      FALSE      0.05 0.79992 0.7964134 0.8034266
+## 4  20 0.6 one.sample      FALSE      0.05 0.80724 0.8037824 0.8106976
+## 5  12 0.8 one.sample      FALSE      0.05 0.80306 0.7995742 0.8065458
+## 6   9 1.0 one.sample      FALSE      0.05 0.84530 0.8421303 0.8484697</code></pre>
 <div id="laplacemu-1-version" class="section level4">
 <h4>Laplace(<span class="math inline">\(\mu\)</span>, 1) version</h4>
 <p>A one-sample Wilcoxon signed rank test with Laplace distribution as the
@@ -832,7 +839,7 @@ manually, accepting arguments such as <code>n</code> and <code>d</code>.</p>
 ## 
 ## Estimate of power: 0.801
 ## 95% Confidence Interval: [0.793, 0.809]
-## Execution time (H:M:S): 00:00:04</code></pre>
+## Execution time (H:M:S): 00:00:01</code></pre>
 <p>G*power gives the estimate .830, which seems somewhat high (see below).</p>
 <p>The following partially recreates the simulation results in Figure 29
 for the Laplace(<span class="math inline">\(\mu\)</span>, 1) distribution with varying sample sizes and
@@ -881,7 +888,7 @@ using McNemar’s test. The data is from O’Brien (2002, p. 161-163).</p>
 ## 
 ## Estimate of power: 0.836
 ## 95% Confidence Interval: [0.828, 0.843]
-## Execution time (H:M:S): 00:00:03</code></pre>
+## Execution time (H:M:S): 00:00:01</code></pre>
 <p>Alternatively, specifying the inputs not in terms of proportions but
 rather as the odds ratio (<span class="math inline">\(OR=\pi_{12}/\pi_{21}=.08/.32=.25\)</span>) and
 proportions of discordant pairs
@@ -901,7 +908,7 @@ proportions of discordant pairs
 ## 
 ## Estimate of power: 0.841
 ## 95% Confidence Interval: [0.834, 0.848]
-## Execution time (H:M:S): 00:00:03</code></pre>
+## Execution time (H:M:S): 00:00:01</code></pre>
 <p>G*Power gives .839 (<span class="math inline">\(\alpha = .032\)</span>). Slightly more power can be
 achieved when not using the continuity correction, though in general
 this is not recommended in practice.</p>
@@ -918,7 +925,7 @@ this is not recommended in practice.</p>
 ## 
 ## Estimate of power: 0.887
 ## 95% Confidence Interval: [0.881, 0.893]
-## Execution time (H:M:S): 00:00:03</code></pre>
+## Execution time (H:M:S): 00:00:01</code></pre>
 </div>
 </div>
 <div id="multiple-linear-regression-fixed-ivs" class="section level1">
@@ -941,7 +948,7 @@ observations with <span class="math inline">\(k=5\)</span> predictor variables g
 ## 
 ## Estimate of power: 0.664
 ## 95% Confidence Interval: [0.655, 0.674]
-## Execution time (H:M:S): 00:00:45</code></pre>
+## Execution time (H:M:S): 00:00:17</code></pre>
 <p>G*power gives <span class="math inline">\(1-\beta = .673\)</span>.</p>
 </div>
 <div id="example-14.3" class="section level3">
@@ -963,7 +970,7 @@ and a change of <span class="math inline">\(\Delta R^2=.05\)</span> from the bas
 ## 
 ## Estimate of power: 0.238
 ## 95% Confidence Interval: [0.230, 0.247]
-## Execution time (H:M:S): 00:00:56</code></pre>
+## Execution time (H:M:S): 00:00:21</code></pre>
 <p>G*power gives <span class="math inline">\(1-\beta = .241\)</span>. Solving the sample size to achieve 80%
 power</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a><span class="kw">p_lm.R2</span>(<span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">100</span>, <span class="dv">400</span>), <span class="dt">R2=</span>.<span class="dv">3</span>, <span class="dt">R2_0 =</span> <span class="fl">.25</span>, <span class="dt">k=</span><span class="dv">9</span>, <span class="dt">k.R2_0=</span><span class="dv">5</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
@@ -980,7 +987,7 @@ power</p>
 ## 
 ## Estimate of n: 242.6
 ## 95% Confidence Interval: [240.5, 244.6]
-## Execution time (H:M:S): 00:03:07</code></pre>
+## Execution time (H:M:S): 00:01:12</code></pre>
 <p>G*power gives <span class="math inline">\(n = 242\)</span>.</p>
 </div>
 <div id="example-14.3b" class="section level3">
@@ -1001,7 +1008,7 @@ versus 9 IVs. Requires the specification of the <span class="math inline">\(R^2_
 ## 
 ## Estimate of power: 0.756
 ## 95% Confidence Interval: [0.748, 0.765]
-## Execution time (H:M:S): 00:01:17</code></pre>
+## Execution time (H:M:S): 00:00:28</code></pre>
 <p>G*power gives <span class="math inline">\(1-\beta = .767\)</span>.</p>
 </div>
 </div>
@@ -1024,7 +1031,7 @@ randomly sampled instead of fixed.</p>
 ## 
 ## Estimate of power: 0.659
 ## 95% Confidence Interval: [0.650, 0.669]
-## Execution time (H:M:S): 00:00:16</code></pre>
+## Execution time (H:M:S): 00:00:06</code></pre>
 <p>G*power gives 0.662 using a one-tailed test criterion.</p>
 </div>
 </div>
@@ -1041,14 +1048,14 @@ hypothesis <span class="math inline">\(H_0:\beta_1=0\)</span> given <span class=
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 5
-##       n  sd_x  sd_y sig.level power
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
-## 1   100   7.5     4      0.05 NA
+## # A tibble: 1 × 6
+##       n    beta  sd_x  sd_y sig.level power
+##   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1   100 -0.0667   7.5     4      0.05 NA
 ## 
 ## Estimate of power: 0.243
 ## 95% Confidence Interval: [0.234, 0.251]
-## Execution time (H:M:S): 00:00:31</code></pre>
+## Execution time (H:M:S): 00:00:12</code></pre>
 <p>G*power returns the power estimate <span class="math inline">\(1-\beta = 0.2389\)</span>.</p>
 </div>
 </div>
@@ -1071,7 +1078,7 @@ hypothesis <span class="math inline">\(H_0:\beta_1=0\)</span> given <span class=
 ## 
 ## Estimate of n: 38.7
 ## 95% Confidence Interval: [38.1, 39.2]
-## Execution time (H:M:S): 00:00:25</code></pre>
+## Execution time (H:M:S): 00:00:10</code></pre>
 <p>G*power gives the estimate <span class="math inline">\(n=39\)</span>.</p>
 <p>Fixing <span class="math inline">\(n=200\)</span> in total (hence, <span class="math inline">\(n=200/k=20\)</span>) and performing a
 compromise analysis assuming <span class="math inline">\(q=\frac{\beta}{\alpha}=1\)</span>,</p>
@@ -1091,7 +1098,7 @@ compromise analysis assuming <span class="math inline">\(q=\frac{\beta}{\alpha}=
 ## 
 ## Estimate of power (1-beta): 0.840
 ## 95% Confidence Interval: [0.836, 0.844]
-## Execution time (H:M:S): 00:00:45</code></pre>
+## Execution time (H:M:S): 00:00:18</code></pre>
 <p>G*Power gives <span class="math inline">\(\alpha=\beta=0.159\)</span>.</p>
 </div>
 </div>
@@ -1145,14 +1152,14 @@ is the following.</p>
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 8
-##   test      sigma     n   sdx1   sdx2   dbeta sig.level power
-##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
-## 1 X:S = 0 0.55784    28 9.0291 11.868 0.01592      0.05 NA
+## # A tibble: 1 × 10
+##   formula   test      sigma     n  n2_n1   sdx1   sdx2   dbeta sig.level power
+##   &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
+## 1 y ~ X * S X:S = 0 0.55784    28 1.5714 9.0291 11.868 0.01592      0.05 NA
 ## 
 ## Estimate of power: 0.199
 ## 95% Confidence Interval: [0.191, 0.207]
-## Execution time (H:M:S): 00:00:35</code></pre>
+## Execution time (H:M:S): 00:00:14</code></pre>
 <p>For the a priori power analysis to achieve a power of .80</p>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1"></a><span class="kw">p_glm</span>(<span class="dt">formula=</span>y<span class="op">~</span>X<span class="op">*</span>S, <span class="dt">test=</span><span class="st">&quot;X:S = 0&quot;</span>,</span>
 <span id="cb77-2"><a href="#cb77-2"></a>      <span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">100</span>, <span class="dv">1000</span>), <span class="dt">n2_n1=</span><span class="dv">44</span><span class="op">/</span><span class="dv">28</span>, <span class="dt">sdx1=</span><span class="fl">9.02914</span>, <span class="dt">sdx2=</span><span class="fl">11.86779</span>, <span class="dt">dbeta=</span><span class="fl">0.01592</span>,</span>
@@ -1163,14 +1170,14 @@ is the following.</p>
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 8
-##   test      sigma     n   sdx1   sdx2   dbeta sig.level power
-##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 X:S = 0 0.55784    NA 9.0291 11.868 0.01592      0.05   0.8
+## # A tibble: 1 × 10
+##   formula   test      sigma     n  n2_n1   sdx1   sdx2   dbeta sig.level power
+##   &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+## 1 y ~ X * S X:S = 0 0.55784    NA 1.5714 9.0291 11.868 0.01592      0.05   0.8
 ## 
 ## Estimate of n: 164.9
 ## 95% Confidence Interval: [163.3, 166.8]
-## Execution time (H:M:S): 00:02:01</code></pre>
+## Execution time (H:M:S): 00:00:48</code></pre>
 <p>G*Power gives the estimate for <span class="math inline">\(n\)</span> to be 163 (and therefore 256 in the
 second group given the <code>n2_n1</code>).</p>
 </div>
@@ -1195,7 +1202,7 @@ variance ratio test, assuming that the target power is <span class="math inline"
 ## 
 ## Estimate of n: 80.6
 ## 95% Confidence Interval: [79.3, 82.2]
-## Execution time (H:M:S): 00:00:37</code></pre>
+## Execution time (H:M:S): 00:00:13</code></pre>
 <p>G*power gives sample size of 81.</p>
 </div>
 <div id="example-15.3-two-sample-variance-test" class="section level2">
@@ -1209,14 +1216,14 @@ variance ratio test, assuming that the target power is <span class="math inline"
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 4
-##       n two.tailed sig.level power
-##   &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;dbl&gt;
-## 1    NA TRUE            0.05   0.8
+## # A tibble: 1 × 5
+##       n  vars two.tailed sig.level power
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;          &lt;dbl&gt; &lt;dbl&gt;
+## 1    NA     1 TRUE            0.05   0.8
 ## 
 ## Estimate of n: 193.4
 ## 95% Confidence Interval: [191.5, 195.4]
-## Execution time (H:M:S): 00:00:48</code></pre>
+## Execution time (H:M:S): 00:00:17</code></pre>
 <p>G*Power gives estimate of 193 per group.</p>
 </div>
 </div>
@@ -1239,7 +1246,7 @@ one-tailed, medium effect size (<span class="math inline">\(d=0.5\)</span>), <sp
 ## 
 ## Estimate of n: 86.9
 ## 95% Confidence Interval: [85.2, 88.5]
-## Execution time (H:M:S): 00:00:14</code></pre>
+## Execution time (H:M:S): 00:00:05</code></pre>
 <p>G*power estimate is 88 per group, <code>Spower</code> estimate is 86.9348386 with
 the 95% CI [85.2010744, 88.4738772].</p>
 <div id="example-19.3-paired-samples-t-test" class="section level3">
@@ -1254,14 +1261,14 @@ repeated measures Cohen’s <span class="math inline">\(d_r=.421637\)</span> (e.
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 4
-##         d type   sig.level power
-##     &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;lgl&gt;
-## 1 0.42164 paired      0.05 NA
+## # A tibble: 1 × 5
+##       n       d type   sig.level power
+##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;lgl&gt;
+## 1   100 0.42164 paired      0.05 NA
 ## 
 ## Estimate of power: 0.840
 ## 95% Confidence Interval: [0.837, 0.843]
-## Execution time (H:M:S): 00:00:22</code></pre>
+## Execution time (H:M:S): 00:00:07</code></pre>
 <p>G*power gives power estimate of .832, though Cohen reported a value
 closer to .840. When <span class="math inline">\(d=0.2828427\)</span> this leads to</p>
 <div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1"></a><span class="kw">p_t.test</span>(<span class="dt">n=</span><span class="dv">50</span> <span class="op">*</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">d=</span>.<span class="dv">2828427</span>, <span class="dt">type =</span> <span class="st">&#39;paired&#39;</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>(<span class="dt">replications=</span><span class="dv">50000</span>)</span></code></pre></div>
@@ -1270,14 +1277,14 @@ closer to .840. When <span class="math inline">\(d=0.2828427\)</span> this leads
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 4
-##         d type   sig.level power
-##     &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;lgl&gt;
-## 1 0.28284 paired      0.05 NA
+## # A tibble: 1 × 5
+##       n       d type   sig.level power
+##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;lgl&gt;
+## 1   100 0.28284 paired      0.05 NA
 ## 
 ## Estimate of power: 0.508
 ## 95% Confidence Interval: [0.503, 0.512]
-## Execution time (H:M:S): 00:00:23</code></pre>
+## Execution time (H:M:S): 00:00:07</code></pre>
 <p>In this case G*Power 3.1 gives the estimate .500. To answer the
 question “How many subjects would we need to arrive at a power of about
 0.832114 in a two-group design?” this is specified within <code>Spower()</code> and
@@ -1297,7 +1304,7 @@ is passed directly to the <code>n</code> element in the experiment.</p>
 ## 
 ## Estimate of n: 215.9
 ## 95% Confidence Interval: [213.7, 218.1]
-## Execution time (H:M:S): 00:00:25</code></pre>
+## Execution time (H:M:S): 00:00:09</code></pre>
 <p>G*power reports that around <span class="math inline">\(N=110*2=220\)</span> pairs are required, though
 this is estimated visually using interpolation.</p>
 </div>
@@ -1321,7 +1328,7 @@ one-tailed <span class="math inline">\(d=.625\)</span> to achieve <span class="m
 ## 
 ## Estimate of n: 28.7
 ## 95% Confidence Interval: [28.0, 29.4]
-## Execution time (H:M:S): 00:00:11</code></pre>
+## Execution time (H:M:S): 00:00:04</code></pre>
 <p>G*power gives sample size of <span class="math inline">\(n=30\)</span>. Similarly, though with different
 inputs.</p>
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1"></a><span class="kw">p_t.test</span>(<span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">100</span>,<span class="dv">2000</span>), <span class="dt">d=</span>.<span class="dv">1</span>, <span class="dt">type=</span><span class="st">&#39;one.sample&#39;</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st">  </span></span>
@@ -1338,7 +1345,7 @@ inputs.</p>
 ## 
 ## Estimate of n: 1509.8
 ## 95% Confidence Interval: [1489.5, 1529.2]
-## Execution time (H:M:S): 00:00:17</code></pre>
+## Execution time (H:M:S): 00:00:06</code></pre>
 <p>G*power gives sample size of <span class="math inline">\(n=1492\)</span>.</p>
 </div>
 <div id="wilcoxon-tests" class="section level2">
@@ -1355,11 +1362,11 @@ inputs.</p>
 ## # A tibble: 1 × 6
 ##       n     d type       two.tailed sig.level power
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;lgl&gt;          &lt;dbl&gt; &lt;lgl&gt;
-## 1   649   0.1 one.sample FALSE           0.05 NA
+## 1    11   0.8 one.sample FALSE           0.05 NA
 ## 
-## Estimate of power: 0.799
-## 95% Confidence Interval: [0.791, 0.806]
-## Execution time (H:M:S): 00:00:22</code></pre>
+## Estimate of power: 0.813
+## 95% Confidence Interval: [0.806, 0.821]
+## Execution time (H:M:S): 00:00:01</code></pre>
 <p>G*power 3.1 provides a power estimate of .800, agreeing with <code>Spower</code>.</p>
 <p>Similarly, assuming that the distribution for the one-sample followed a
 Laplace distribution, and that <span class="math inline">\(N=11\)</span> were used instead. This requires
@@ -1382,9 +1389,9 @@ defining an alternative parent distribution, which below uses the
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;lgl&gt;          &lt;dbl&gt; &lt;lgl&gt;
 ## 1    11   0.8 one.sample FALSE           0.05 NA
 ## 
-## Estimate of power: 0.815
-## 95% Confidence Interval: [0.807, 0.822]
-## Execution time (H:M:S): 00:00:04</code></pre>
+## Estimate of power: 0.813
+## 95% Confidence Interval: [0.806, 0.821]
+## Execution time (H:M:S): 00:00:01</code></pre>
 <p>Interestingly, G*power 3.1 reports this power to be 0.830.</p>
 </div>
 <div id="two-sample-test-with-laplace-distributions" class="section level3">
@@ -1415,7 +1422,7 @@ central tendencies.</p>
 ## 
 ## Estimate of power: 0.851
 ## 95% Confidence Interval: [0.844, 0.858]
-## Execution time (H:M:S): 00:00:11</code></pre>
+## Execution time (H:M:S): 00:00:04</code></pre>
 <p>Unlike before with the Laplace distribution, G*power 3.1 seems to agree
 with <code>Spower</code>, where a power of .847 is reported. This seems to raise questions about the consistency of the results.</p>
 </div>
@@ -1435,14 +1442,14 @@ with <code>Spower</code>, where a power of .847 is reported. This seems to raise
 ## 
 ## Design conditions:
 ## 
-## # A tibble: 1 × 4
-##        d type   sig.level power
-##    &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;lgl&gt;
-## 1 1.1384 paired      0.05 NA
+## # A tibble: 1 × 5
+##       n      d type   sig.level power
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;lgl&gt;
+## 1    20 1.1384 paired      0.05 NA
 ## 
 ## Estimate of power: 0.933
 ## 95% Confidence Interval: [0.928, 0.938]
-## Execution time (H:M:S): 00:00:05</code></pre>
+## Execution time (H:M:S): 00:00:01</code></pre>
 <p>Again, the simulation approach and G*power 3.1 differ in their outputs,
 where in G*power 3.1 the reported power is 0.853.</p>
 </div>

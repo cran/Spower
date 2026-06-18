@@ -1,6 +1,6 @@
 Package: Spower
 Title: Power Analyses using Monte Carlo Simulations
-Version: 0.6.3
+Version: 0.6.4
 Authors@R: 
    person("Phil", family="Chalmers", email =
                      "rphilip.chalmers@gmail.com", role = c("aut", "cre"), 
@@ -36,9 +36,9 @@ Maintainer: Phil Chalmers <rphilip.chalmers@gmail.com>
 URL: https://philchalmers.github.io/Spower/,
         https://github.com/philchalmers/Spower
 BugReports: https://github.com/philchalmers/Spower/issues?state=open
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0
 NeedsCompilation: no
-Packaged: 2026-05-21 19:09:59 UTC; phil
+Packaged: 2026-06-18 00:58:19 UTC; phil
 Author: Phil Chalmers [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-5332-2810>)
-Date/Publication: 2026-05-21 19:30:02 UTC
+Date/Publication: 2026-06-18 02:50:02 UTC

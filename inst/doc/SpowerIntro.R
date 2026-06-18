@@ -147,6 +147,16 @@ if(eval)
 		SpowerCurve(n=c(30, 60, 90, 120), mean=c(.2, .5, .8))
 print(store$gg2)
 
+## ----eval=FALSE---------------------------------------------------------------
+# p_single.t() |>
+# 	SpowerCurve(n=c(30, 60, 90, 120), mean=c(.2, .5, .8), mu=c(0, .1))
+
+## ----echo=FALSE, collapse=TRUE------------------------------------------------
+if(eval)
+	store$gg3 <- p_single.t() |> 
+		SpowerCurve(n=c(30, 60, 90, 120), mean=c(.2, .5, .8), mu=c(0, .1))
+print(store$gg3)
+
 ## ----include=FALSE, eval=eval-------------------------------------------------
 # saveRDS(store, '../inst/intro.rds') # rebuild package when done
 

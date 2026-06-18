@@ -215,6 +215,7 @@
 #'
 #' @import SimDesign stats cli
 #' @importFrom mirai make_cluster stop_cluster
+#' @importFrom methods is
 #' @return an invisible \code{tibble}/\code{data.frame}-type object of
 #' class \code{'Spower'} containing the power results from the
 #' simulation experiment
@@ -534,6 +535,14 @@ Spower <- function(..., power = NA, sig.level=.05, interval,
 		stop('Exactly *one* argument must be set to \'NA\' in Spower(..., power, sig.level)',
 			 call.=FALSE)
 	lst_expr <- as.list(expr)[-1]
+	if(length(lst_expr) && any(sapply(lst_expr, is.call))){
+		tmp <- lst_expr
+		tmp[sapply(lst_expr, is.call)] <- sapply(tmp[sapply(lst_expr, is.call)], eval)
+		pick <- sapply(tmp, \(x) (is.atomic(x) || is.list(x)) && length(x) == 1)
+		lst_expr[pick] <- tmp[pick]
+		pick <- sapply(tmp, \(x) methods::is(x, 'formula'))
+		lst_expr[pick] <- sapply(tmp[pick], deparse1)
+	}
 	if(length(lst_expr))
 		lst_expr <- lst_expr[sapply(lst_expr, \(x) is.atomic(x) || is.list(x))]
 	conditions <- do.call(SimDesign::createDesign, c(lst_expr, sig.level=sig.level, power=power))

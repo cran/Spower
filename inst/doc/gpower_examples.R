@@ -398,8 +398,8 @@ print(store$ex.20.3b)
 # p_wilcox.test(n=649, d=.1, type='one.sample', two.tailed=FALSE) |> Spower()
 
 ## ----echo=FALSE, collapse=TRUE------------------------------------------------
-if(eval) store$ex.22.1 <- getLastSpower()
-print(store$ex.22.1)
+if(eval) store$ex.22.3 <- getLastSpower()
+print(store$ex.22.3)
 
 ## ----eval=eval----------------------------------------------------------------
 # library(extraDistr)
@@ -411,8 +411,8 @@ print(store$ex.22.1)
 # p_wilcox.test(n=11, d=.8, type='one.sample', two.tailed=FALSE, parent1 = parent1) |> Spower()
 
 ## ----echo=FALSE, collapse=TRUE------------------------------------------------
-if(eval) store$ex.22.1b <- getLastSpower()
-print(store$ex.22.1b)
+if(eval) store$ex.22.3b <- getLastSpower()
+print(store$ex.22.3b)
 
 ## ----eval=eval----------------------------------------------------------------
 # library(extraDistr)

@@ -35,8 +35,7 @@ print(typeS)
 
 ## ----eval=eval----------------------------------------------------------------
 # typeS <- .01
-# l_two.t_correct.sign(n=NA, mean=.2) |>
-# 	Spower(power=1-typeS, interval=c(10, 200))
+# l_two.t_correct.sign(n=interval(10, 200), mean=.2) |> Spower(power=1-typeS)
 
 ## ----echo=FALSE, collapse=TRUE------------------------------------------------
 if(eval) store$typeS.N <- getLastSpower()
