@@ -12,7 +12,7 @@
 
 <meta name="author" content="Phil Chalmers" />
 
-<meta name="date" content="2026-06-18" />
+<meta name="date" content="2026-10-15" />
 
 <title>Logical Vectors, Bayesian power analyses, and ROPEs</title>
 
@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Logical Vectors, Bayesian power analyses, and ROPEs</h1>
 <h4 class="author">Phil Chalmers</h4>
-<h4 class="date">June 18, 2026</h4>
+<h4 class="date">October 15, 2026</h4>
 
 
 <div id="TOC">
@@ -435,7 +435,7 @@ relevant when <code>logical</code> information is returned. The following compar
 ## 
 ## Estimate of power: 0.846
 ## 95% Confidence Interval: [0.839, 0.853]
-## Execution time (H:M:S): 00:00:01</code></pre>
+## Execution time (H:M:S): 00:00:03</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">l_single.t</span>(<span class="dt">n=</span><span class="dv">100</span>, <span class="dt">mean=</span>.<span class="dv">3</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span><span class="kw">Spower</span>()</span></code></pre></div>
 <pre><code>## 
 ## ── Spower Results ──────────────────────────────────────────────────────────────
@@ -449,7 +449,7 @@ relevant when <code>logical</code> information is returned. The following compar
 ## 
 ## Estimate of power: 0.841
 ## 95% Confidence Interval: [0.834, 0.849]
-## Execution time (H:M:S): 00:00:01</code></pre>
+## Execution time (H:M:S): 00:00:04</code></pre>
 <div id="using-previouls-defined-simulation-code" class="section level3">
 <h3>Using previouls defined simulation code</h3>
 <p>Note that even in the CI context presented above, writing user-defined functions may not be entirely necessary. This is because the related, internally defined function <code>p_t.test()</code> can be used to obtain the same CI information by returning the model itself, and subsequently extracting the <code>$conf.int</code> element. The benefit of this, as shown below, is that users do not need to reinvent the data generation and analysis portions of the experiment if this is already available in the package.</p>
@@ -509,7 +509,7 @@ the “small” effect size of <span class="math inline">\(d=0.2\)</span>?</p>
 ## 
 ## Estimate of n: 272.6
 ## 95% Confidence Interval: [272.0, 273.2]
-## Execution time (H:M:S): 00:00:07</code></pre>
+## Execution time (H:M:S): 00:00:22</code></pre>
 <p>Compared to the required <span class="math inline">\(N\)</span> from a power analysis that just contains a
 significant result, this joint practical significance criteria requires a meaningfully higher sample size. Note that in the special case where <code>CI.width=Inf</code> then all CI widths will be accepted, which will result in the same power output that would have been obtained using <code>p_single.t()</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">l_precision</span>(<span class="dt">n=</span><span class="kw">interval</span>(<span class="dv">10</span>, <span class="dv">500</span>), <span class="dt">mean=</span>.<span class="dv">2</span>, <span class="dt">CI.width=</span><span class="ot">Inf</span>) <span class="op">|</span><span class="er">&gt;</span><span class="st"> </span></span>
@@ -526,7 +526,7 @@ significant result, this joint practical significance criteria requires a meanin
 ## 
 ## Estimate of n: 198.8
 ## 95% Confidence Interval: [197.2, 200.2]
-## Execution time (H:M:S): 00:00:06</code></pre>
+## Execution time (H:M:S): 00:00:21</code></pre>
 </div>
 <div id="bayes-factors" class="section level2">
 <h2>Bayes Factors</h2>
@@ -577,7 +577,7 @@ while <code>Spower()</code> is informed to only focus on the <code>logical</code
 ## 
 ## Estimate of power: 0.265
 ## 95% Confidence Interval: [0.257, 0.274]
-## Execution time (H:M:S): 00:00:33</code></pre>
+## Execution time (H:M:S): 00:01:25</code></pre>
 <p>To view the complete simulation results use <code>SimResults()</code> on the resulting output, which if useful could be further plotted. Note that when plotting Bayes factors it is advantageous to present the plot in natural log units.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>BFresults &lt;-<span class="st"> </span><span class="kw">SimResults</span>(BFsim)</span>
 <span id="cb18-2"><a href="#cb18-2"></a>BFresults</span></code></pre></div>
@@ -659,7 +659,7 @@ notably lower power.</p>
 ## 
 ## Estimate of power: 0.150
 ## 95% Confidence Interval: [0.143, 0.157]
-## Execution time (H:M:S): 00:00:31</code></pre>
+## Execution time (H:M:S): 00:01:23</code></pre>
 <p>With this approach all of the power analysis criteria described in
 <code>help(Spower)</code> are still possible, where for instance solving other
 experimental components (such as the sample size <code>n</code>) are easy to setup
@@ -718,7 +718,7 @@ would be deemed practically equivalent a priori. The power to jointly reject the
 ## 
 ## Estimate of power: 0.844
 ## 95% Confidence Interval: [0.837, 0.851]
-## Execution time (H:M:S): 00:00:01</code></pre>
+## Execution time (H:M:S): 00:00:06</code></pre>
 <p>In this case, the power to conclude that the two groups are equivalent, expressed as a percentage, is 84%.
 You can verify that these computations are correct by comparing to
 established software for now, such as via the <code>TOSTER</code> package.</p>
@@ -762,7 +762,7 @@ NOTE: n is number in *each* group</code></pre>
 ## 
 ## Estimate of power: 0.851
 ## 95% Confidence Interval: [0.844, 0.858]
-## Execution time (H:M:S): 00:00:01</code></pre>
+## Execution time (H:M:S): 00:00:05</code></pre>
 </div>
 <div id="bayesian-approach-to-ropes-hdi-rope" class="section level2">
 <h2>Bayesian approach to ROPEs (HDI + ROPE)</h2>
@@ -815,9 +815,9 @@ to utilize all available cores.</p>
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;
 ## 1    50     2     1   0.5      0.95 NA
 ## 
-## Estimate of power: 0.138
-## 95% Confidence Interval: [0.132, 0.145]
-## Execution time (H:M:S): 00:04:04</code></pre>
+## Estimate of power: 0.144
+## 95% Confidence Interval: [0.137, 0.151]
+## Execution time (H:M:S): 00:31:28</code></pre>
 <p>Finally, to demonstrate why this might be useful, the following
 estimates the required sample size to achieve 80% power when using a 95%
 HDI-ROPE criteria.</p>
@@ -833,9 +833,9 @@ HDI-ROPE criteria.</p>
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
 ## 1    NA     2     1   0.5      0.95   0.8
 ## 
-## Estimate of n: 108.2
-## 95% Confidence Interval: [106.5, 110.0]
-## Execution time (H:M:S): 00:16:25</code></pre>
+## Estimate of n: 108.3
+## 95% Confidence Interval: [107.6, 109.0]
+## Execution time (H:M:S): 01:28:00</code></pre>
 </div>
 </div>
 

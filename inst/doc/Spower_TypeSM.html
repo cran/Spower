@@ -12,7 +12,7 @@
 
 <meta name="author" content="Phil Chalmers" />
 
-<meta name="date" content="2026-06-18" />
+<meta name="date" content="2026-10-15" />
 
 <title>Conditional Power Analyses via Type M and Type S errors</title>
 
@@ -343,7 +343,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Conditional Power Analyses via Type M and Type S errors</h1>
 <h4 class="author">Phil Chalmers</h4>
-<h4 class="date">June 18, 2026</h4>
+<h4 class="date">October 15, 2026</h4>
 
 
 <div id="TOC">
@@ -438,7 +438,7 @@ are relevant to the power analysis under investigation.</p>
 ## 
 ## Estimate of power: 0.924
 ## 95% Confidence Interval: [0.919, 0.929]
-## Execution time (H:M:S): 00:00:06</code></pre>
+## Execution time (H:M:S): 00:00:23</code></pre>
 <p>From the output from <code>Spower()</code>, the <code>power</code> information reflects the
 estimated probability that the correct sign
 decision was made given that “significance” was observed, while <span class="math inline">\(1-power\)</span>
@@ -466,7 +466,7 @@ is observed. The following code evaluates how to obtain such an <span class="mat
 ## 
 ## Estimate of n: 47.7
 ## 95% Confidence Interval: [44.1, 51.7]
-## Execution time (H:M:S): 00:00:05</code></pre>
+## Execution time (H:M:S): 00:00:18</code></pre>
 <p>Hence, one would need a sample size of approximately
 48 per group in order to have a Type S error be
 approximately 1%.</p>
@@ -514,7 +514,7 @@ user does not have to.</p>
 ## 
 ## Estimate of power: 0.925
 ## 95% Confidence Interval: [0.920, 0.930]
-## Execution time (H:M:S): 00:00:08</code></pre>
+## Execution time (H:M:S): 00:00:31</code></pre>
 <p>If at all possible it is recommended to use the <code>return_analysis</code> approach as the simulation experiments defined within the package have all been well tested. The trade-off, as it is with all higher-level functions in R, is that there will often be slightly more overhead than user-defined functions, though of course the latter approach comes at the cost of safety.</p>
 </div>
 </div>
@@ -568,7 +568,7 @@ the following.</p>
 ## 
 ## Estimate of power: 0.861
 ## 95% Confidence Interval: [0.854, 0.868]
-## Execution time (H:M:S): 00:00:05</code></pre>
+## Execution time (H:M:S): 00:00:20</code></pre>
 <p>In this case, <code>power</code> represents the probability that, given a
 significant result was observed, the resulting <span class="math inline">\(M\)</span> ratio was less than the
 cutoff of 3 (hence, was less than three times the true effect size). The
@@ -620,7 +620,7 @@ issues, as seen below by doubling the sample size below.</p>
 ## 
 ## Estimate of power: 0.991
 ## 95% Confidence Interval: [0.989, 0.993]
-## Execution time (H:M:S): 00:00:04</code></pre>
+## Execution time (H:M:S): 00:00:15</code></pre>
 <p>where the Type M error for the <span class="math inline">\(M.ratio = 3\)</span> cutoff is now</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>last &lt;-<span class="st"> </span><span class="kw">getLastSpower</span>()</span>
 <span id="cb21-2"><a href="#cb21-2"></a><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>last<span class="op">$</span>power</span></code></pre></div>

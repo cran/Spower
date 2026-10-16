@@ -18,6 +18,10 @@
 #'   difference
 #' @param parent2 same as \code{parent1}, but for the second group
 #' @param two.tailed logical; use two-tailed test?
+#'   For one-tailed tests relevant \code{alternative} arguments are set to \code{'greater'}
+#' @param alternative character vector passed to \code{alternative} analysis function
+#'   (most commonly, \code{'two.tailed', 'greater', 'less'}). When used, ignores the value
+#'   of \code{two.tailed}
 #' @param return_analysis logical; return the analysis object for further
 #'   extraction and customization?
 #' @export
@@ -43,22 +47,25 @@
 p_wilcox.test <- function(n, d, n2_n1 = 1, mu=0,
 						  type = c('two.sample', 'one.sample', 'paired'),
 						  exact = NULL, correct = TRUE, two.tailed = TRUE,
+						  alternative = NULL,
 						  parent1 = function(n, d) rnorm(n, d, 1),
 						  parent2 = function(n, d) rnorm(n, 0, 1),
 						  return_analysis = FALSE){
 	type <- match.arg(type)
 	dat1 <- parent1(n, d)
+	if(is.null(alternative))
+		alternative <- ifelse(two.tailed, "two.sided", "greater")
 	ret <- if(type == 'one.sample'){
-		wilcox.test(dat1, mu=mu, correct=correct, exact=exact)
+		wilcox.test(dat1, mu=mu, correct=correct, exact=exact,
+					alternative=alternative)
 	} else {
 		paired <- type == 'paired'
 		if(paired) stopifnot(n2_n1 == 1)
 		dat2 <- parent2(n*n2_n1, d)
-		wilcox.test(dat1, dat2, paired=paired,
+		wilcox.test(dat1, dat2, paired=paired, alternative=alternative,
 					mu=mu, correct=correct, exact=exact)
 	}
 	if(return_analysis) return(ret)
 	p <- ret$p.value
-	p <- ifelse(two.tailed, p, p/2)
 	p
 }

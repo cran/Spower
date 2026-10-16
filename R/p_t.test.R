@@ -18,6 +18,10 @@
 #' @param type type of t-test to use; can be \code{'two.sample'},
 #'   \code{'one.sample'}, or \code{'paired'}
 #' @param two.tailed logical; should a two-tailed or one-tailed test be used?
+#'   For one-tailed tests relevant \code{alternative} arguments are set to \code{'greater'}
+#' @param alternative character vector passed to \code{alternative} analysis function
+#'   (most commonly, \code{'two.tailed', 'greater', 'less'}). When used, ignores the value
+#'   of \code{two.tailed}
 #' @param var.equal logical; use the classical or Welch corrected t-test?
 #' @param n2_n1 allocation ratio reflecting the same size ratio.
 #'   Default of 1 sets the groups to be the same size. Only applicable
@@ -125,8 +129,8 @@
 #'
 #' @export
 p_t.test <- function(n, d, mu = 0, r = NULL, type = 'two.sample',
-					 n2_n1 = 1, two.tailed = TRUE, var.equal = TRUE,
-					 means=NULL, sds=NULL, conf.level = .95,
+					 n2_n1 = 1, two.tailed = TRUE, alternative = NULL,
+					 var.equal = TRUE, means=NULL, sds=NULL, conf.level = .95,
 					 gen_fun=gen_t.test, return_analysis = FALSE, ...) {
 	if(is.null(means))
 		if(!missing(d) && !is.null(r))
@@ -137,18 +141,19 @@ p_t.test <- function(n, d, mu = 0, r = NULL, type = 'two.sample',
 	}
 	dat <- gen_fun(n=n, n2_n1=n2_n1, d=d, r=r, type=type,
 				   means=means, sds=sds, ...)
+	if(is.null(alternative))
+		alternative <- ifelse(two.tailed, "two.sided", "greater")
 	res <- if(type == 'paired'){
 		t.test(dat[[1]], dat[[2]], mu=mu,
-			   paired=TRUE, conf.level=conf.level)
+			   paired=TRUE, conf.level=conf.level, alternative=alternative)
 	} else if(type == 'two.sample'){
 		t.test(dat[[1]], dat[[2]], var.equal=var.equal,
-			   mu=mu, conf.level=conf.level)
+			   mu=mu, conf.level=conf.level, alternative=alternative)
 	} else if(type == 'one.sample') {
-		t.test(dat[[1]], mu=mu, conf.level=conf.level)
+		t.test(dat[[1]], mu=mu, conf.level=conf.level, alternative=alternative)
 	}
 	if(return_analysis) return(res)
 	p <- res$p.value
-	p <- ifelse(two.tailed, p, p/2)
 	p
 }
 

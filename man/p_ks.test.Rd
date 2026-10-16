@@ -10,6 +10,7 @@ p_ks.test(
   p2,
   n2_n1 = 1,
   two.tailed = TRUE,
+  alternative = NULL,
   parent = NULL,
   return_analysis = FALSE,
   ...
@@ -26,7 +27,12 @@ specified}
 
 \item{n2_n1}{sample size ratio. Default uses equal sample sizes}
 
-\item{two.tailed}{logical; should a two-tailed or one-tailed test be used?}
+\item{two.tailed}{logical; should a two-tailed or one-tailed test be used?
+For one-tailed tests relevant \code{alternative} arguments are set to \code{'greater'}}
+
+\item{alternative}{character vector passed to \code{alternative} analysis function
+(most commonly, \code{'two.tailed', 'greater', 'less'}). When used, ignores the value
+of \code{two.tailed}}
 
 \item{parent}{the cumulative distribution function to use
 (e.g., \code{\link{pnorm}}). Specifying this input will construct a
@@ -53,10 +59,10 @@ the same distribution (two sample) or from a theoretically known distribution
 # two-sample test from two Gaussian distributions with different locations
 p1 <- function(n) rnorm(n)
 p2 <- function(n) rnorm(n, mean=-.5)
-p_ks.test(n=100, p1, p2)
+p_ks.test(n=100, p2, p1)
 
 # return analysis model
-p_ks.test(n=100, p1, p2, return_analysis=TRUE)
+p_ks.test(n=100, p2, p1, return_analysis=TRUE)
 
 # one-sample data from chi-squared distribution tested
 #   against a standard normal distribution
@@ -65,7 +71,7 @@ p_ks.test(n=100, p1=pc, parent=pnorm, mean=0, sd=1)
 
 \donttest{
   # empirical power estimates
-  p_ks.test(n=100, p1, p2) |> Spower()
+  p_ks.test(n=100, p2, p1) |> Spower()
   p_ks.test(n=100, p1=pc, parent=pnorm, mean=0, sd=1) |> Spower()
 
 }

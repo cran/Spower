@@ -11,6 +11,7 @@ p_r(
   rho = 0,
   method = "pearson",
   two.tailed = TRUE,
+  alternative = NULL,
   gen_fun = gen_r,
   return_analysis = FALSE,
   ...
@@ -29,7 +30,12 @@ Fisher's z-transformation approximation when non-zero}
 \item{method}{method to use to compute the correlation
 (see \code{\link{cor.test}}). Only used when \code{rho = 0}}
 
-\item{two.tailed}{logical; should a two-tailed or one-tailed test be used?}
+\item{two.tailed}{logical; should a two-tailed or one-tailed test be used?
+For one-tailed tests relevant \code{alternative} arguments are set to \code{'greater'}}
+
+\item{alternative}{character vector passed to \code{alternative} analysis function
+(most commonly, \code{'two.tailed', 'greater', 'less'}). When used, ignores the value
+of \code{two.tailed}}
 
 \item{gen_fun}{function used to generate the required dependent bivariate data.
 Object returned must be a \code{matrix} with two columns and \code{n} rows.
